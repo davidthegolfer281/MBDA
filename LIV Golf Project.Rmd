@@ -507,6 +507,8 @@ daily_sentiment <- sentiment_data %>% group_by(day_created) %>% summarise(sentim
 daily_sentiment
 ```
 
+### Daily Sentiment Score - LIV Golf
+
 ```{r}
 #Create Plot of daily sentiment of tweets with LIVGolf
 sentiment_plot <- ggplot(daily_sentiment, aes(x = day_created, 
@@ -530,6 +532,8 @@ user_sentiment_mean <- only_users_sentiment %>% group_by(day_created) %>% summar
 user_sentiment_mean
 ```
 
+### Daily Sentiment Score - User
+
 ```{r}
 #Create Plot of user authored tweets.
 only_users_sentiment_plot <- ggplot(only_users_sentiment, 
@@ -541,6 +545,8 @@ only_users_sentiment_plot <- ggplot(only_users_sentiment,
   labs(y = "Sentiment Score", x = "Date of Tweet")
 only_users_sentiment_plot + scale_x_continuous(breaks =                               c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)) 
 ```
+
+### Mean Sentiment Score - User
 
 ```{r}
 #Create Plot of user authored tweets.
