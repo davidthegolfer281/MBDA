@@ -37,7 +37,7 @@ final_data <- read.csv("final_data")
 
 ## 1. Cleaning and manipulating data
 
-The purpose of this process will be to remove all unneccessary variables not required for research as well as create additional variables of sentiment and reception, then split the data frame based on the source of each tweet.
+The purpose of this process will be to remove all unnecessary variables not required for research as well as create additional variables of sentiment and reception, then split the data frame based on the source of each tweet.
 
 ```{r}
 #Remove duplicate variables
@@ -322,7 +322,7 @@ Additional analysis is required to understand why users with significantly small
 
 ## 3. Frequency Analysis
 
-The puropse of the freqeuncy analysis is to determine to amount of converstation over time about LIV golf and to determine how much of the conversation is contributed to LIVGolf creating the converstation, media reporting on LIVGolf, and user generated content about the LIVGolf topic.
+The purpose of the frequency analysis is to determine to amount of conversation over time about LIV golf and to determine how much of the conversation is contributed to LIVGolf creating the conversation, media reporting on LIVGolf, and user generated content about the LIVGolf topic.
 
 ```{r}
 source_by_type <- final_data %>% group_by(day_created, source) %>%
@@ -358,19 +358,19 @@ rel_freq_plot + scale_x_continuous(breaks =
 
 ### Conclusions
 
-Media Contributors- Media repoting about LIVGolf saw a peak from the 13th to the 17th of November. Additional analysis is required to determine the topic of conversation for media tweets.
+Media Contributors- Media reporting about LIVGolf saw a peak from the 13th to the 17th of November. Additional analysis is required to determine the topic of conversation for media tweets.
 
 All Contributors - The highest level of activity seen on the Twitter platform from LIVGolf was on the 17th and 14th of November.
 
-User Contribution - The highest level of activity seen on the platform from users was on the 18th and of November. Additional anlysis could be conducted to understand content on the 18th of November to greater understand what motivated users to post about LIVGolf. LivGolf Contribution- The highest total number of tweets from LIvGolf occurred on the 17th of November.
+User Contribution - The highest level of activity seen on the platform from users was on the 18th and of November. Additional analysis could be conducted to understand content on the 18th of November to greater understand what motivated users to post about LIVGolf. LivGolf Contribution- The highest total number of tweets from LIvGolf occurred on the 17th of November.
 
 Additional analysis is required to understand the conversation about LIVGolf during the peak conversational dates. It is possible to explore the connection between number of tweets from LIVGolf and number of user and media tweets.
 
 ## 4. Reception Analysis
 
-Reception of the tweet is meausred as a calculation of enagements while taking into account that the amounts of followers vary between users and vary over time. For the purposes of this research, reception can equate to popularity of opinion. Therefore, measuring reception is crucial to understanding dominant viewpoints about LIVGolf among users.
+Reception of the tweet is measured as a calculation of engagements while taking into account that the amounts of followers vary between users and vary over time. For the purposes of this research, reception can equate to popularity of opinion. Therefore, measuring reception is crucial to understanding dominant viewpoints about LIVGolf among users.
 
-Reception is the mean of retweets \* 2 divided by the number of followers and favorites divided by the number of followers times 100. This calculation accounts for the reach achieved by the number of followers as well as accounting for what occurs when a follower retweets content. The number of users that could potentially interact with content becomes larger as a user's followers retweet content, thus, there is potential for content to be seen by a larger bnumber of users than only followers.
+Reception is the mean of retweets \* 2 divided by the number of followers and favorites divided by the number of followers times 100. This calculation accounts for the reach achieved by the number of followers as well as accounting for what occurs when a follower retweets content. The number of users that could potentially interact with content becomes larger as a user's followers retweet content, thus, there is potential for content to be seen by a larger number of users than only followers.
 
 The purpose of this section will be to understand the level of reception to LIVGolf generated content during the observation period. Then analysis will be conducted to determine if LIV Golf content is either growing in popularity, decreasing in popularity, or remaining relatively stable. A point of comparison is the mean reception score of content generated by users. If significantly different, future analysis could be conducted to understand the message behind content with higher or lower reception scored content.
 
@@ -473,13 +473,13 @@ diagnose_outlier(only_users_reception)
 
 LIVGolf Reception - LIVGolf experienced the highest level of reception from its content from the 11th to 13th of November. Further Analysis is required to understand potential reasons why content during those dates was received differently than content on other days during the collection period.
 
-User Reception - November 11th and 13th experienced the highest reception score of user generated content. From analysis in the boxplot, it is evident that outliers impact the mean level of reception from user generated tweets. The mean score is signifiacntly lower if outliers were to be removed. A small minority of content is driving reception scores signifiacntly higher on those dates.
+User Reception - November 11th and 13th experienced the highest reception score of user generated content. From analysis in the boxplot, it is evident that outliers impact the mean level of reception from user generated tweets. The mean score is significantly lower if outliers were to be removed. A small minority of content is driving reception scores significantly higher on those dates.
 
 Further analysis is required to determine if the content of the tweet is responsible for the presence of the outliers in user generated content. #Further analysis to understand reception will isolate tweets with significantly higher reception scores to understand the content in the tweets.
 
 ## 5. Sentiment Analysis
 
-The purpose of this section is to understand the sentiment of opinion being used in tweets created by LIVGolf and by user generated content. The goal is to identify main ideas or topics of conversation to further guage reception of the LIVGolf product. Additionally, by generating the sentiment variable, research identify overall tone of the conversation as ebing either positve or negative.
+The purpose of this section is to understand the sentiment of opinion being used in tweets created by LIVGolf and by user generated content. The goal is to identify main ideas or topics of conversation to further guage reception of the LIVGolf product. Additionally, by generating the sentiment variable, research identify overall tone of the conversation as being either positive or negative.
 
 ```{r}
 #remove media and advertisements to isolate only users and LIVGolf.
@@ -576,11 +576,11 @@ only_users_sentiment %>%
 
 ### Conclusions
 
-Sentiment of the entire dataset reveals that the 16th and 19th of November resulted in the dates with the lowest sentiment values. Even when the dataset of tweets was seperated by author, the 16th and 19th had the lowest sentiment scores.
+Sentiment of the entire dataset reveals that the 16th and 19th of November resulted in the dates with the lowest sentiment values. Even when the dataset of tweets was separated by author, the 16th and 19th had the lowest sentiment scores.
 
-The 24th of November resulted in the highest mean sentiment score for all tweets and when analyzed by source. The violin plot and boxplot illustrates a realatively tight clustering of sentiment scores without any outliers.
+The 24th of November resulted in the highest mean sentiment score for all tweets and when analyzed by source. The violin plot and boxplot illustrates a relatively tight clustering of sentiment scores without any outliers.
 
-The violin plot illustrates the range of sentiment scores and the amount of occurances where observations are clustered. For example, the 22nd of November experienced a large amount of content with sentiment score close to zero, therefore, the violin is wider at that score. The 22nd also reveals height based on the presence of outliers that were significantly far away from the mean. The fewer the amount of outliers, and the wider the plot reveals a more consistent sentiment score for that date in the observation period. The 8th, 9th, and 13th experienced no outliers in sentiment.
+The violin plot illustrates the range of sentiment scores and the amount of occurrences where observations are clustered. For example, the 22nd of November experienced a large amount of content with sentiment score close to zero, therefore, the violin is wider at that score. The 22nd also reveals height based on the presence of outliers that were significantly far away from the mean. The fewer the amount of outliers, and the wider the plot reveals a more consistent sentiment score for that date in the observation period. The 8th, 9th, and 13th experienced no outliers in sentiment.
 
 ## 6. Emotion Analysis
 The purpose of this section is to understand the emotions conveyed through language analysis of the text in observed content.
@@ -639,7 +639,7 @@ emotion_plot_users + theme(axis.text.x = element_text(angle = 45, vjust = 1,
 
 LIVGolf - As expected, LIVGolf emotion count is indicative of an organization attempting to gather followers, spread awareness of their brand, and is largely positive. The LIVGolf content is expressing anticipation for future events with an overall positive emotion.
 
-Users - When analyzing user generated content, the dominant emotion is happiness but there is a significant increase in the neagtivity conveyed in the tweet. Additionally, emotions like sadness, anger, and fear also increased.
+Users - When analyzing user generated content, the dominant emotion is happiness but there is a significant increase in the negativity conveyed in the tweet. Additionally, emotions like sadness, anger, and fear also increased.
 
 ## 7. Text Analysis
 
