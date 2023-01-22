@@ -10,7 +10,7 @@ output:
     code_download: true
 ---
 
-```{r}
+```{r, message=FALSE}
 library(rtweet)
 library(dplyr)
 library(ggplot2)
@@ -240,7 +240,7 @@ final_data$favorite_ratio <-
 final_data$reception <- apply(final_data[14:15], 1, mean, na.rm = TRUE)
 ```
 
-```{r}
+```{r, warning=FALSE}
 #Transform the text viable into a usable form.
 text_corpus <- Corpus(VectorSource(final_data$text))
 text_corpus <- tm_map(text_corpus, tolower)
@@ -292,7 +292,7 @@ final_source %>% group_by(source) %>% count(source, sort = TRUE)
 final_data %>% group_by(screen_name) %>% count(screen_name, sort = TRUE)
 ```
 
-```{r}
+```{r, results=HIDE}
 #Identify distribution of tweets over time.
 final_data %>% group_by(day_created) %>% count(day_created, sort = FALSE)
 day_created
@@ -585,7 +585,7 @@ The violin plot illustrates the range of sentiment scores and the amount of occu
 ## 6. Emotion Analysis
 The purpose of this section is to understand the emotions conveyed through language analysis of the text in observed content.
 
-```{r}
+```{r, warning=FALSE}
 #create dataframe to capture emotions from all tweets.
 ew_sentiment_LIV <- get_nrc_sentiment(LIVGolf$text_clean)
 sentimentscores_LIV <- data.frame(colSums(ew_sentiment_LIV[,]))
@@ -650,7 +650,7 @@ The purpose of this section is to further understand the conversation and topics
 text_LIV <- Corpus(VectorSource(LIVGolf$text_clean))
 ```
 
-```{r}
+```{r, warning=FALSE}
 #Clean the text variable
 text_LIV <- text_LIV %>%
   tm_map(removeNumbers) %>%
@@ -680,7 +680,7 @@ wordcloud(words = df_text_LIV$word, freq = df_text_LIV$freq, min.freq = 2,      
 text_user <- Corpus(VectorSource(only_users$text_clean))
 ```
 
-```{r}
+```{r, warning=FALSE}
 #Clean the text variable
 text_user <- text_user %>%
   tm_map(removeNumbers) %>%
@@ -706,7 +706,7 @@ df_text_user <- data.frame(word = names(words_text_user),freq=words_text_user)
 wordcloud(words = df_text_user$word, freq = df_text_user$freq, min.freq = 12,           max.words=200,random.order=FALSE, rot.per=0.35,colors=brewer.pal(8,            "Dark2"))
 ```
 
-```{r}
+```{r, message=FALSE}
 final_data %>% 
   unnest_tokens(output = word, input = text_clean) %>% 
   anti_join(stop_words) %>% 
@@ -850,7 +850,7 @@ result <- predict(LIV_user_relationship, a)
 print(result)
 ```
 
-```{r}
+```{r, message=FALSE}
 linear_plot <- ggplot(data, aes(x = x, y = y)) + 
   geom_point( color="#69b3a2") +
   geom_smooth(method=lm , color="red", se=TRUE) +
