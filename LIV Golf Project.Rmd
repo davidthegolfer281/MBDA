@@ -615,6 +615,8 @@ sentimentscores_LIV <- cbind("sentiment" =
 rownames(sentimentscores_LIV) <- NULL
 ```
 
+### Emotion Frequency Plot - LIV Golf
+
 ```{r}
 #plot sentiment of emotions to understand the general tone of conversation about LIVGolf.
 emotion_plot_LIV <- ggplot(data = sentimentscores_LIV, 
@@ -640,6 +642,8 @@ sentimentscores_users <- cbind("sentiment" =
                            sentimentscores_users)
 rownames(sentimentscores_users) <- NULL
 ```
+
+### Emotion Frequency Plot - All Content
 
 ```{r}
 #plot sentiment of emotions to understand the general tone of conversation about LIVGolf.
@@ -690,6 +694,8 @@ words_text_LIV <- sort(rowSums(matrix_text_LIV),decreasing=TRUE)
 df_text_LIV <- data.frame(word = names(words_text_LIV),freq=words_text_LIV)
 ```
 
+### Worldcloud - LIV Golf Authored Content
+
 ```{r}
 #Create Wordcloud of most frequently used words used in LIVGolf authored content.
 wordcloud(words = df_text_LIV$word, freq = df_text_LIV$freq, min.freq = 2,           max.words=200,random.order=FALSE, rot.per=0.35,colors=brewer.pal(8,            "Dark2")) 
@@ -720,6 +726,8 @@ matrix_text_user <- as.matrix(dtm_user)
 words_text_user <- sort(rowSums(matrix_text_user),decreasing=TRUE) 
 df_text_user <- data.frame(word = names(words_text_user),freq=words_text_user)
 ```
+
+### Worldcloud - User Authored Content
 
 ```{r}
 #Create Wordcloud of most frequently used words used in LIVGolf authored content.
@@ -766,6 +774,8 @@ ScaleWeight <- function(x, lambda) {
   x / lambda}
 threshold <- 4
 ```
+
+### User Content Bigram
 
 ```{r}
 network <-  bigram_count %>%
@@ -869,6 +879,8 @@ a <- data.frame(x = 10)
 result <- predict(LIV_user_relationship, a)
 print(result)
 ```
+
+### Linear Regression Plot
 
 ```{r, message=FALSE}
 linear_plot <- ggplot(data, aes(x = x, y = y)) + 
