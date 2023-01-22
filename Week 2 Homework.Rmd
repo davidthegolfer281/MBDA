@@ -1,5 +1,5 @@
 ---
-title: "MBDA 730 Week 2 Homework"
+title: "MBDA LIV Golf Project"
 author: "David Curtis"
 date: "2023-01-21"
 output: 
