@@ -1,0 +1,868 @@
+---
+title: "MBDA LIV Golf Project"
+author: "David Curtis"
+date: "2023-01-21"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+    code_download: true
+---
+
+```{r}
+library(rtweet)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(SentimentAnalysis)
+library(dlookr)
+library(hrbrthemes)
+library(viridis)
+library(stringr)
+library(tidytext)
+library(tm)
+library(tokenizers)
+library(wordcloud)
+library(tidyr)
+library(glue)
+library(igraph)
+library(syuzhet)
+```
+
+```{r}
+#import dataset
+final_data <- read.csv("final_data")
+```
+
+## 1. Cleaning and manipulating data
+
+The purpose of this process will be to remove all unneccessary variables not required for research as well as create additional variables of sentiment and reception, then split the data frame based on the source of each tweet.
+
+```{r}
+#Remove duplicate variables
+final_data <- subset(final_data, select = -c(X, name, account_created_at))
+
+#delete irrelevant tweets from bots and ads, or followers == 0
+final_data <- subset(final_data, screen_name!= "Ben09783952")
+final_data <- subset(final_data, screen_name!= "New805Guy")
+final_data <- subset(final_data, screen_name!= "cohnsins")
+final_data <- subset(final_data, screen_name!= "plumcrazy13")
+final_data <- subset(final_data, screen_name!= "MHS98877812")
+final_data <- subset(final_data, screen_name!= "fitgolfergirl")
+final_data <- subset(final_data, screen_name!= "agonzalezfl")
+final_data <- subset(final_data, screen_name!= "LoftyLlamaGolf")
+final_data <- subset(final_data, screen_name!= "DuffinUp")
+final_data <- subset(final_data, screen_name!= "LFStevie1")
+final_data <- subset(final_data, screen_name!= "Expose1996")
+final_data <- subset(final_data, screen_name!= "GeorgeD79716453")
+final_data <- subset(final_data, 
+                     screen_name!= "Anonymo40364053")
+final_data <- subset(final_data, screen_name!= "ThysLourens14")
+final_data <- subset(final_data, screen_name!= "PinHighMedia")
+final_data <- subset(final_data, screen_name!= "AndyColq")
+final_data <- subset(final_data, screen_name!= "XGolfOrlandPark")
+
+#format the created_at variable into a usable format.
+final_data$created_at.1 <- ymd_hms(final_data$created_at.1)
+
+#Bind day variable into original data frame
+day_created <- day(final_data$created_at.1)
+final_data <-cbind(day_created, final_data)
+final_data <- subset(final_data, select = -c(created_at.1))
+
+#create a data frame with relevant variables to identify the source of each tweet.
+final_source <- final_data %>% 
+  select(source, text, screen_name) 
+```
+
+```{r}
+#Clean source variable for future analysis
+final_source$source <- gsub("\\$", "", final_source$source)
+final_source$source <- gsub("@\\w+", "", final_source$source)
+final_source$source <- gsub("[[:punct:]]","", final_source$source)
+final_source$source <- gsub("httpwww", "", final_source$source)
+final_source$source <- gsub("[ |\t]{2,}", "", final_source$source)
+final_source$source<- gsub("^ ", "", final_source$source)
+final_source$source<- gsub(" $", "", final_source$source)
+final_source$source <- gsub("RT","", final_source$source)
+final_source$source <- gsub("href", "", final_source$source)
+final_source$source <- gsub("([0-9])","", final_source$source)
+final_source$source <- gsub("relnofollowTwitter","", final_source$source)
+final_source$source <- gsub("for","", final_source$source)
+final_source$source <- gsub("App","", final_source$source)
+final_source$source <- gsub(" ","", final_source$source)
+final_source$source <- gsub("asocialbakerscomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpsstudiotwittercom","",
+  final_source$source)
+final_source$source <- gsub("ahttptwittercomdownloadiphone","",
+  final_source$source)
+final_source$source <- gsub("ahttpswwwsportnewscentralcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpshypefurycomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpsmobiletwittercom","",
+  final_source$source)
+final_source$source <- gsub("ahttptwittercomdownloadandroid","",
+  final_source$source)
+final_source$source <- gsub("ahttpswwwhootsuitecomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpstwittercomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahubspotcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpsiftttcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpsbuffercomrelnofollow","",
+  final_source$source)
+final_source$source <-
+  gsub("ahttpsabouttwittercomproductstweetdeckrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpswwwspreakercomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttptwittercomdownloadipad","",
+  final_source$source)
+final_source$source <- gsub("ahttpsdlvritcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpswwwtweetedtimescomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpgainappcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpstwittercom","",
+  final_source$source)
+final_source$source <- gsub("ahttpswwwspredfastcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpinstagramcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttppublicizewpcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("apowerappscomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpssocialzohocomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpsupstractcomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("ahttpswwwmeetsocicomrelnofollow","",
+  final_source$source)
+final_source$source <- gsub("atobeannouncedcomrelnofollow","",
+  final_source$source)
+final_source$source <- 
+  gsub("ahttpshajimemanabuinforelnofollowwptwitterappa","Advertisement",
+  final_source$source)
+final_source$source <- 
+  gsub("ahttpshajimemanabuinelnofollowwptwitterappa","Advertisement",
+  final_source$source)
+```
+
+```{r}
+#Bin each of the sources into a tweet generated by a user, media, advertisement, or the organization "LIV Golf". 
+final_source$source <- gsub("Weba", "User", final_source$source)
+final_source$source <- gsub("iPhonea", "User", final_source$source)
+final_source$source <- gsub("Androida", "User", final_source$source)
+final_source$source <- gsub("iPada", "User", final_source$source)
+final_source$source <- gsub("Emplifia", "User", final_source$source)
+final_source$source <- gsub("Buffera", "Advertisement", final_source$source)
+final_source$source <- gsub("Instagrama", "Advertisement", final_source$source)
+final_source$source <- gsub("ptwitterappa", "Advertisement",
+                            final_source$source)
+final_source$source <- gsub("SOCia", "Advertisement",
+                            final_source$source)
+final_source$source <- gsub("WordPresscoma", "Advertisement",
+                            final_source$source)
+final_source$source <- gsub("Advertisersa", "Media",
+                            final_source$source)
+final_source$source <- gsub("ZohoSociala", "Media",
+                            final_source$source)
+final_source$source <- gsub("TweetDeckUser", "Media",
+                            final_source$source)
+final_source$source <- gsub("TweetDecka", "Media",
+                            final_source$source)
+final_source$source <- gsub("TheTweetedTimesa", "Media",
+                            final_source$source)
+final_source$source <- gsub("Spreakera", "Media",
+                            final_source$source)
+final_source$source <- gsub("sportcntrlbota", "Media",
+                            final_source$source)
+final_source$source <- gsub("MicrosoftPowerPlatma", "Media",
+                            final_source$source)
+final_source$source <- gsub("MediaStudioa", "Media",
+                            final_source$source)
+final_source$source <- gsub("KhorosPublishinga", "Media",
+                            final_source$source)
+final_source$source <- gsub("Hypefurya", "Media",
+                            final_source$source)
+final_source$source <- gsub("Hypefurya", "Media",
+                            final_source$source)
+final_source$source <- gsub("dlvrita", "Media",
+                            final_source$source)
+final_source$source <- gsub("GainPlatma", "Media",
+                            final_source$source)
+final_source$source <- gsub("IFTTTa", "Media",
+                            final_source$source)
+final_source$source <- gsub("HubSpota", "Media",
+                            final_source$source)
+final_source$source <- gsub("HootsuiteInca", "Media",
+                            final_source$source)
+final_source$source <- gsub("ahttpitunesapplecomusapptwitteridmtMaca",    
+                            "Media", final_source$source)
+final_source$source <- gsub("EdgeElectionPod",    
+                            "Media", final_source$source)
+final_source$source <- gsub("NewsUsersa",    
+                            "Media", final_source$source)
+final_source$source <- gsub("UpstractNewsBroadcasta",    
+                            "Media", final_source$source)
+final_source$source[final_source$screen_name == "LIVGolfInv"] <- "LIVGolf"
+final_source$source[final_source$screen_name == "FieldLevelMedia"] <- "Media"
+```
+
+```{r}
+#Rename source variable as source_clean, and bind it to the final dataset.
+final_data <- cbind(final_source$source, final_data)
+names(final_data)[1] = "source_clean"
+final_data <- subset(final_data, select = -c(source))
+names(final_data)[1] = "source"
+```
+
+```{r}
+#Generate reception scores
+options(scipen = 999)
+
+#Generate retweet ratio
+final_data$retweet_ratio <-
+  (final_data$retweet_count*2/final_data$followers_count) * 100
+
+#Generate favorite ratio
+final_data$favorite_ratio <-
+  (final_data$favorite_count/final_data$followers_count) * 100
+
+#Generate reception score for each tweet.
+final_data$reception <- apply(final_data[14:15], 1, mean, na.rm = TRUE)
+```
+
+```{r}
+#Transform the text viable into a usable form.
+text_corpus <- Corpus(VectorSource(final_data$text))
+text_corpus <- tm_map(text_corpus, tolower)
+text_corpus <- tm_map(text_corpus, removeWords, stopwords("english"))
+text_corpus <- tm_map(text_corpus, removePunctuation)
+text_df <- data.frame(text_clean = get("content", text_corpus), stringsAsFactors = FALSE)
+final_data <- cbind.data.frame(final_data, text_df)
+
+#Remove redundant text variable "full_text"
+final_data <- subset(final_data, select= -c(text, full_text))
+
+#create sentiment dataframe
+sentiment <- analyzeSentiment(final_data$text_clean)
+
+#bind and rename sentiment scores to dataset
+final_data <- cbind(final_data, sentiment$SentimentGI)
+names(final_data)[16] = "sentiment"
+```
+
+```{r}
+#reorder variables in dataframe
+final_data <- final_data[, c(2,3,4,15,1,5,6,7,8,9,10,11,12,13,14,16)]
+```
+
+```{r}
+#Create new data frames for future analysis.
+
+#Data frame for users
+only_users <- final_data[final_data$source == "User", ]
+
+#Data frame for LIVGolfInv
+LIVGolf <- final_data[final_data$screen_name == "LIVGolfInv", ]
+
+#Data frame for media
+media <- final_data[final_data$source == "Media", ]
+```
+
+## 2. Exploratory Analysis
+
+The purpose of this process is to understand basic properties of the dataset and begin to understand what information the dataset contains.
+
+```{r}
+#Identify the quantity of tweets from each source.
+final_source %>% group_by(source) %>% count(source, sort = TRUE)
+```
+
+```{r}
+#Identify each users contribution to the dataset. 
+final_data %>% group_by(screen_name) %>% count(screen_name, sort = TRUE)
+```
+
+```{r}
+#Identify distribution of tweets over time.
+final_data %>% group_by(day_created) %>% count(day_created, sort = FALSE)
+day_created
+```
+
+```{r}
+#Identify aspects of the favorite_count variable.
+favorites_w_user <- select(final_data, screen_name, favorite_count)
+arrange(favorites_w_user, desc(favorite_count))
+```
+
+```{r}
+#Identify aspects of the retweet_count variable.
+retweets_w_user <- select(final_data, screen_name, retweet_count)
+arrange(retweets_w_user, desc(retweet_count))
+```
+
+### Conclusions
+
+Source Variable - LIVGolf has several hundred thousand followers, but those followers only create a very small amount of conversation about the series. While users as a whole create a larger total quantity of tweets, throughout the observation period, no other user created as many tweets about LIVGolf than the account "LIVGolfInv".
+
+Retweet Variable - As expected, the users with the highest amount of followers garnered the highest number of retweets per post. It is unexpected the amount of retweets that LIVGolf content creates among their followers.
+
+Favorite_count Variable - As expected, the users with the highest amount of followers garnered the highest number of favorites per tweet. It is unexpected that LIVGolf content creates such a relatively small amount of likes in relation to their follower count.
+
+Additional analysis is required to understand why users with significantly smaller amounts of followers recieved a comparable amount of favorites, specifically the users "20thCenturyDan" and "AndrewKirbyGolf". What is it about those two tweets that generated engagement from thier followers and is it indicative of the reception of LIVGolf?
+
+## 3. Frequency Analysis
+
+The puropse of the freqeuncy analysis is to determine to amount of converstation over time about LIV golf and to determine how much of the conversation is contributed to LIVGolf creating the converstation, media reporting on LIVGolf, and user generated content about the LIVGolf topic.
+
+```{r}
+source_by_type <- final_data %>% group_by(day_created, source) %>%
+  summarise(total_count = n (), .groups = "keep") %>%
+  as.data.frame()
+source_by_type
+```
+
+```{r}
+histogram_all_plot <- ggplot(source_by_type, aes(x = day_created, 
+                                                 y = total_count)) +
+  geom_bar(aes(color = source, fill = source), stat = "identity", 
+           position = position_stack()) +
+  labs(title = "Source of LIVGolf Content",
+      subtitle = "November 8th to November 28th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Daily Count", x = "Date Created")
+histogram_all_plot + scale_x_continuous(breaks =                                          c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)) 
+```
+
+```{r}
+rel_freq_plot <- ggplot(source_by_type, aes(x = day_created, 
+                                            y = total_count)) +
+  geom_bar(aes(color = source, fill = source), stat = "identity", 
+           position = "fill") +
+  labs(title = "Relative Frequency of Source",
+      subtitle = "November 8th to November 29th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Percent of Tweets", x = "Date Created")
+rel_freq_plot + scale_x_continuous(breaks =
+        c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29))       
+```
+
+### Conclusions
+
+Media Contributors- Media repoting about LIVGolf saw a peak from the 13th to the 17th of November. Additional analysis is required to determine the topic of conversation for media tweets.
+
+All Contributors - The highest level of activity seen on the Twitter platform from LIVGolf was on the 17th and 14th of November.
+
+User Contribution - The highest level of activity seen on the platform from users was on the 18th and of November. Additional anlysis could be conducted to understand content on the 18th of November to greater understand what motivated users to post about LIVGolf. LivGolf Contribution- The highest total number of tweets from LIvGolf occurred on the 17th of November.
+
+Additional analysis is required to understand the conversation about LIVGolf during the peak conversational dates. It is possible to explore the connection between number of tweets from LIVGolf and number of user and media tweets.
+
+## 4. Reception Analysis
+
+Reception of the tweet is meausred as a calculation of enagements while taking into account that the amounts of followers vary between users and vary over time. For the purposes of this research, reception can equate to popularity of opinion. Therefore, measuring reception is crucial to understanding dominant viewpoints about LIVGolf among users.
+
+Reception is the mean of retweets \* 2 divided by the number of followers and favorites divided by the number of followers times 100. This calculation accounts for the reach achieved by the number of followers as well as accounting for what occurs when a follower retweets content. The number of users that could potentially interact with content becomes larger as a user's followers retweet content, thus, there is potential for content to be seen by a larger bnumber of users than only followers.
+
+The purpose of this section will be to understand the level of reception to LIVGolf generated content during the observation period. Then analysis will be conducted to determine if LIV Golf content is either growing in popularity, decreasing in popularity, or remaining relatively stable. A point of comparison is the mean reception score of content generated by users. If significantly different, future analysis could be conducted to understand the message behind content with higher or lower reception scored content.
+
+```{r}
+#Identify users with the highest reception score
+retweet_reach <- select(final_data, screen_name, reception, source, day_created)
+arrange(retweet_reach, desc(reception))
+```
+
+```{r}
+#Plot reception over time for LIVGolf generated content.
+LIV_Golf_reception_plot <- ggplot(LIVGolf, aes(x = day_created, 
+                                               y = reception)) + 
+  geom_point(size = 1, color = "red") +
+  labs(title = "Reception Score of LIVGolf Generated Tweets",
+      subtitle = "November 8th to November 28th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Reception Score", x = "Date of Tweet")
+LIV_Golf_reception_plot + scale_x_continuous(breaks =
+       c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29))         
+```
+
+```{r}
+#Generate Mean reception score per day of observation for LIVGolf generated content because of instances where LIVGolf created multiple tweets per day.
+LIV_daily_reception <- LIVGolf %>% group_by(day_created) %>% summarise(reception = mean(reception))
+
+#Plot mean daily reception values of LIVGolf generated content.
+daily_reception_plot <- ggplot(LIV_daily_reception, aes(x = day_created, 
+                                                y = reception)) + 
+  geom_point(size = 1, color = "red") +
+  geom_segment(aes(x = day_created, xend = day_created, y = 0, yend =
+                     reception)) +
+  labs(title = "Mean Reception Score of LIVGolf Generated Tweets",
+      subtitle = "November 8th to November 27th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Reception Score", x = "Date of Tweet")
+daily_reception_plot + scale_x_continuous(breaks =                                        c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)) 
+```
+
+```{r}
+#Create mean reception values for user generated content.
+mean_user_daily_reception <- only_users %>% group_by(day_created) %>% summarise(reception = mean(reception))
+
+#Plot mean daily reception values of user generated content.
+mean_user_daily_reception_plot <- ggplot(mean_user_daily_reception, 
+                                         aes(x = day_created,
+                                             y = reception)) + 
+  geom_point(size = 1, color = "blue") +
+  geom_segment(aes(x = day_created, xend = day_created, y = 0, yend =
+                     reception)) +
+  labs(title = "Mean Reception Score of User Tweets",
+      subtitle = "November 8th to November 28th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Reception Score", x = "Date of Tweet")
+mean_user_daily_reception_plot + scale_x_continuous(breaks =                               c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29))
+```
+
+```{r}
+only_users_reception <- select(only_users, day_created, reception) %>%
+  arrange(day_created)
+only_users_reception$day_created <-
+  as.character(only_users_reception$day_created)
+names(only_users_reception)[1] = "group"
+```
+
+```{r}
+only_users_reception %>%
+  ggplot( aes(x = group, y = reception, fill = group)) +
+    geom_boxplot() +
+  theme(legend.position="none",
+        plot.title = element_text(size=15)) +
+  labs(title = "User Reception Boxplot",
+      subtitle = "November 8th to November 28th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Reception Score", x = "Date Collected")
+```
+
+```{r}
+LIV_followers_count <- select(LIVGolf, day_created, followers_count) %>% arrange(day_created)
+```
+
+```{r}
+LIV_followers_plot <- LIV_followers_count %>%
+  ggplot( aes(x = day_created, y = followers_count)) +
+    geom_line() +
+  theme(legend.position="none",
+        plot.title = element_text(size=15)) +
+  labs(title = "Number of Users Following LIVGolf",
+      subtitle = "November 8th to November 29th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Followers", x = "Date")
+LIV_followers_plot + scale_x_continuous(breaks =                                      c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29))
+```
+
+```{r}
+diagnose_outlier(only_users_reception)
+```
+
+### Conclusions
+
+LIVGolf Reception - LIVGolf experienced the highest level of reception from its content from the 11th to 13th of November. Further Analysis is required to understand potential reasons why content during those dates was received differently than content on other days during the collection period.
+
+User Reception - November 11th and 13th experienced the highest reception score of user generated content. From analysis in the boxplot, it is evident that outliers impact the mean level of reception from user generated tweets. The mean score is signifiacntly lower if outliers were to be removed. A small minority of content is driving reception scores signifiacntly higher on those dates.
+
+Further analysis is required to determine if the content of the tweet is responsible for the presence of the outliers in user generated content. #Further analysis to understand reception will isolate tweets with significantly higher reception scores to understand the content in the tweets.
+
+## 5. Sentiment Analysis
+
+The purpose of this section is to understand the sentiment of opinion being used in tweets created by LIVGolf and by user generated content. The goal is to identify main ideas or topics of conversation to further guage reception of the LIVGolf product. Additionally, by generating the sentiment variable, research identify overall tone of the conversation as ebing either positve or negative.
+
+```{r}
+#remove media and advertisements to isolate only users and LIVGolf.
+all_sentiment <- subset(final_data, source != "Media")
+
+#Create data frame to understand sentiment over time.
+sentiment_data <- select(final_data, day_created, sentiment)
+
+#calculate mean sentiment score throughout the observation period
+daily_sentiment <- sentiment_data %>% group_by(day_created) %>% summarise(sentiment = mean(sentiment))
+daily_sentiment
+```
+
+```{r}
+#Create Plot of daily sentiment of tweets with LIVGolf
+sentiment_plot <- ggplot(daily_sentiment, aes(x = day_created, 
+                                              y = sentiment)) +
+  geom_point(size = 1, color = "blue") +
+  geom_segment(aes(x = day_created, xend = day_created, y = 0, yend = 
+    sentiment)) +
+  labs(title = "Mean Sentiment Score of all LIVGolf Tweets",
+      subtitle = "November 8th to November 29th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Sentiment Score", x = "Date of Tweet")
+sentiment_plot + scale_x_continuous(breaks =                                       c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)) 
+```
+
+```{r}
+#understand user sentiment.
+only_users_sentiment <- select(only_users, day_created, sentiment)
+
+#calculate mean sentiment score throughout the observation period
+user_sentiment_mean <- only_users_sentiment %>% group_by(day_created) %>% summarise(sentiment = mean(sentiment))
+user_sentiment_mean
+```
+
+```{r}
+#Create Plot of user authored tweets.
+only_users_sentiment_plot <- ggplot(only_users_sentiment, 
+  aes(x = day_created, y = sentiment)) +
+  geom_point(size = 1, color = "blue") +
+  labs(title = "Sentiment Scores of User Tweets",
+      subtitle = "November 8th to November 29th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Sentiment Score", x = "Date of Tweet")
+only_users_sentiment_plot + scale_x_continuous(breaks =                               c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)) 
+```
+
+```{r}
+#Create Plot of user authored tweets.
+user_sentiment_mean_plot <- ggplot(user_sentiment_mean, 
+  aes(x = day_created, y = sentiment)) +
+  geom_point(size = 1, color = "blue") +
+  geom_segment(aes(x = day_created, xend = day_created, y = 0, yend =
+                     sentiment)) +
+  labs(title = "Mean Daily Sentiment of User Tweets",
+      subtitle = "November 8th to November 29th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Sentiment Score", x = "Date of Tweet")
+user_sentiment_mean_plot + scale_x_continuous(breaks =                                c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)) 
+```
+
+```{r}
+only_users_sentiment$day_created <-
+  as.character(only_users_sentiment$day_created)
+names(only_users_sentiment)[1] = "group"
+```
+
+```{r}
+#Boxplot of user sentiment per day of collection
+only_users_sentiment %>%
+  ggplot( aes(x = group, y = sentiment, fill = group)) +
+    geom_boxplot() +
+  theme(legend.position="none",
+        plot.title = element_text(size=15)) +
+  labs(title = "User Sentiment Boxplot by Date",
+      subtitle = "November 8th to November 28th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Sentiment Score", x = "Date Collected")
+```
+
+```{r}
+#Violin chart of user sentiment per day of collection
+only_users_sentiment %>%
+  ggplot( aes(x = group, y = sentiment, fill = group)) +
+    geom_violin() +
+  theme(legend.position="none",
+        plot.title = element_text(size=15)) +
+  labs(title = "User Sentiment Violin Chart by Date",
+      subtitle = "November 8th to November 28th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf") +
+  labs(y = "Sentiment Score", x = "Date Collected")
+```
+
+### Conclusions
+
+Sentiment of the entire dataset reveals that the 16th and 19th of November resulted in the dates with the lowest sentiment values. Even when the dataset of tweets was seperated by author, the 16th and 19th had the lowest sentiment scores.
+
+The 24th of November resulted in the highest mean sentiment score for all tweets and when analyzed by source. The violin plot and boxplot illustrates a realatively tight clustering of sentiment scores without any outliers.
+
+The violin plot illustrates the range of sentiment scores and the amount of occurances where observations are clustered. For example, the 22nd of November experienced a large amount of content with sentiment score close to zero, therefore, the violin is wider at that score. The 22nd also reveals height based on the presence of outliers that were significantly far away from the mean. The fewer the amount of outliers, and the wider the plot reveals a more consistent sentiment score for that date in the observation period. The 8th, 9th, and 13th experienced no outliers in sentiment.
+
+## 6. Emotion Analysis
+The purpose of this section is to understand the emotions conveyed through language analysis of the text in observed content.
+
+```{r}
+#create dataframe to capture emotions from all tweets.
+ew_sentiment_LIV <- get_nrc_sentiment(LIVGolf$text_clean)
+sentimentscores_LIV <- data.frame(colSums(ew_sentiment_LIV[,]))
+names(sentimentscores_LIV) <- "Score"
+sentimentscores_LIV <- cbind("sentiment" =
+                           rownames(sentimentscores_LIV),sentimentscores_LIV)
+rownames(sentimentscores_LIV) <- NULL
+```
+
+```{r}
+#plot sentiment of emotions to understand the general tone of conversation about LIVGolf.
+emotion_plot_LIV <- ggplot(data = sentimentscores_LIV, 
+                       aes(x = sentiment, y = Score)) +
+  geom_bar(aes(fill = sentiment), stat = "identity") +
+  theme(legend.position = "none") +
+  xlab("Sentiments") + ylab("Word Count by Emotion") +
+  labs(title = "Emotion Count of LIV Golf Content",
+      subtitle = "November 8th to November 29th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf")
+  
+emotion_plot_LIV + theme(axis.text.x = element_text(angle = 45, vjust = 1,
+                                                hjust=1))
+```
+
+```{r}
+#create dataframe to capture emotions from all user generated content.
+ew_sentiment_users <- get_nrc_sentiment(only_users$text_clean)
+sentimentscores_users <- data.frame(colSums(ew_sentiment_users[,]))
+names(sentimentscores_users) <- "Score"
+sentimentscores_users <- cbind("sentiment" =
+                           rownames(sentimentscores_users),
+                           sentimentscores_users)
+rownames(sentimentscores_users) <- NULL
+```
+
+```{r}
+#plot sentiment of emotions to understand the general tone of conversation about LIVGolf.
+emotion_plot_users <- ggplot(data = sentimentscores_users, 
+                       aes(x = sentiment, y = Score)) +
+  geom_bar(aes(fill = sentiment), stat = "identity") +
+  theme(legend.position = "none") +
+  xlab("Sentiments") + ylab("Word Count") +
+  labs(title = "Emotion Count of User Generated Content",
+      subtitle = "November 8th to November 29th 2022",
+      caption = "Data Source: Twitter search for #LIVGolf")
+emotion_plot_users + theme(axis.text.x = element_text(angle = 45, vjust = 1,
+                                                hjust=1))
+```
+
+### Conclusions
+
+LIVGolf - As expected, LIVGolf emotion count is indicative of an organization attempting to gather followers, spread awareness of their brand, and is largely positive. The LIVGolf content is expressing anticipation for future events with an overall positive emotion.
+
+Users - When analyzing user generated content, the dominant emotion is happiness but there is a significant increase in the neagtivity conveyed in the tweet. Additionally, emotions like sadness, anger, and fear also increased.
+
+## 7. Text Analysis
+
+The purpose of this section is to further understand the conversation and topics discussed in tweets from LIVGolf and from users during the collection period.
+
+```{r}
+#Create Corpus for LIVGolf authored content.
+text_LIV <- Corpus(VectorSource(LIVGolf$text_clean))
+```
+
+```{r}
+#Clean the text variable
+text_LIV <- text_LIV %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+text_LIV <- tm_map(text_LIV, content_transformer(tolower))
+text_LIV <- tm_map(text_LIV, removeWords, stopwords("english"))
+text_LIV <- tm_map(text_LIV, removeWords, c("LIV", "LIVGolf", "livgolf",
+                                            "httpstcoiflvyyalvx"))
+```
+
+```{r}
+#Create dataframes for the words used and capture the frequency of use.
+dtm_LIV <- TermDocumentMatrix(text_LIV) 
+matrix_text_LIV <- as.matrix(dtm_LIV) 
+words_text_LIV <- sort(rowSums(matrix_text_LIV),decreasing=TRUE) 
+df_text_LIV <- data.frame(word = names(words_text_LIV),freq=words_text_LIV)
+```
+
+```{r}
+#Create Wordcloud of most frequently used words used in LIVGolf authored content.
+wordcloud(words = df_text_LIV$word, freq = df_text_LIV$freq, min.freq = 2,           max.words=200,random.order=FALSE, rot.per=0.35,colors=brewer.pal(8,            "Dark2")) 
+```
+
+```{r}
+#Create Corpus for user generated content.
+text_user <- Corpus(VectorSource(only_users$text_clean))
+```
+
+```{r}
+#Clean the text variable
+text_user <- text_user %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removePunctuation) %>%
+  tm_map(stripWhitespace)
+text_user <- tm_map(text_user, content_transformer(tolower))
+text_user <- tm_map(text_user, removeWords, stopwords("english"))
+text_user <- tm_map(text_user, removeWords, c("liv", "livgolfinv", "livgolf",
+                                              "'s", "said", "day", "amp", 
+                                              "can"))
+```
+
+```{r}
+#Create dataframes for the words used and capture the frequency of use.
+dtm_user <- TermDocumentMatrix(text_user) 
+matrix_text_user <- as.matrix(dtm_user) 
+words_text_user <- sort(rowSums(matrix_text_user),decreasing=TRUE) 
+df_text_user <- data.frame(word = names(words_text_user),freq=words_text_user)
+```
+
+```{r}
+#Create Wordcloud of most frequently used words used in LIVGolf authored content.
+wordcloud(words = df_text_user$word, freq = df_text_user$freq, min.freq = 12,           max.words=200,random.order=FALSE, rot.per=0.35,colors=brewer.pal(8,            "Dark2"))
+```
+
+```{r}
+final_data %>% 
+  unnest_tokens(output = word, input = text_clean) %>% 
+  anti_join(stop_words) %>% 
+  count(word, sort = TRUE) %>% 
+  slice(1:10)
+```
+
+```{r}
+bigram_words <- final_data %>% 
+  unnest_tokens(
+    input = text_clean, 
+    output = bigram, 
+    token = 'ngrams', 
+    n = 2) %>% 
+  filter(! is.na(bigram))
+
+bigram_words %>% 
+  select(bigram) %>% 
+  head(10)
+```
+
+```{r}
+bigram_words <- bigram_words %>% 
+ separate(col = bigram, into = c('word1', 'word2'), sep = ' ')
+```
+
+```{r}
+bigram_count <- bigram_words %>% 
+  count(bigram_words$word1, bigram_words$word2, sort = TRUE) %>% 
+  rename(weight = n)
+
+bigram_count %>% head()
+```
+
+```{r}
+ScaleWeight <- function(x, lambda) {
+  x / lambda}
+threshold <- 4
+```
+
+```{r}
+network <-  bigram_count %>%
+  filter(weight == threshold) %>%
+  mutate(weight == ScaleWeight(x = weight, lambda = 2E3)) %>%
+  graph_from_data_frame(directed = FALSE)
+plot(
+  network, 
+  vertex.size = 1,
+  vertex.label.color = 'black', 
+  vertex.label.cex = 0.5, 
+  vertex.label.dist = 1,
+  edge.color = 'gray', 
+  main = 'Bigram Count Network', 
+  sub = glue('Weight Threshold: {threshold}'), 
+  alpha = 50)
+```
+
+### Conclusions
+
+Wordcloud LIVGOLF - Content generated by LIV Golf is largely comprised on words indicative of fostering excitement and attention to the series.
+
+Wordcloud Users - Users expose a greater amount of word usage and emotions behind those words than LIV Golf. A high frequency of using PGA Tour by users can be indicative of either support or resentment for the competing league and may not necessarily advocate for either league. Additionally, there are word choices by users that very significantly from LIV Golf as they have attempted to distance themselves from Saudi Arabian connection. The users continue to talk about that topic.
+
+Bigram Network - The Bigram network shows that the words used in speaking about LIV Golf represents a very divided user base between accepting LIV for the a sporting league or highlighting its connection to the government of Saudi Arabia.
+
+## 8. Correlation 
+
+The purpose of this section is to understand if there is any connection between how well a tweet is received and its overall sentiment. This section should answer the question if the most negative or most positive tweets are more or less likely to be the content that is engaged with the most.
+
+```{r}
+
+correlation_test <- subset(final_data, select = -c(day_created, screen_name, location, followers_count, friends_count, listed_count, favourites_count, statuses_count, source, retweet_count, retweet_ratio, favorite_ratio, favorite_count, text_clean))
+```
+
+```{r}
+#Determine relationship between reception and sentiment for entire data set
+cor.matrix_a <- cor(correlation_test[1:2])
+cor.matrix_a
+```
+
+```{r}
+#Eliminate excess variables
+correlation_test_LIV <- subset(LIVGolf, select = -c(day_created, screen_name, location, followers_count, friends_count, listed_count, favourites_count, statuses_count, source, retweet_count, retweet_ratio, favorite_ratio, favorite_count, text_clean))
+```
+
+```{r}
+#Determine relationship between reception and sentiment for LIV Golf data frame
+cor.matrixb <- cor(correlation_test_LIV[1:2])
+cor.matrixb
+```
+
+```{r}
+#Eliminate excess variables
+correlation_test_only_users <- subset(only_users, select = -c(day_created, screen_name, location, followers_count, friends_count, listed_count, favourites_count, statuses_count, source, retweet_count, retweet_ratio, favorite_ratio, favorite_count, text_clean))
+```
+
+```{r}
+#Determine relationship between reception and sentiment for LIV Golf data frame
+cor.matrixc <- cor(correlation_test_only_users[1:2])
+cor.matrixc
+```
+
+## 9. Linear Regression
+
+The purpose of this section is to understand future activity from users on the platform by testing the connection between how frequently LIV Golf authors content and measuring the impact that has on motivating users to generate content.
+
+I will create a model that will predict user activity based on the amount of activity from LIV Golf.
+
+```{r}
+#x = number of posts each day by LIV Golf
+#y = number of user posts
+#For every one LIV Golf post we should expect a response of an additional 1.031 user posts.
+x <- c(1,2,1,1,1,2,3,2,2,4,2,1,0,1,1,1,1,0,1,1,0,0)
+y <- c(15,14,18,28,31,26,32,24,30,26,37,25,28,30,29,26,16,13,19,22,23,38)
+LIV_user_relationship <- lm(y~x)
+print(LIV_user_relationship)
+```
+
+```{r}
+data <- data.frame(y,x)
+```
+
+```{r}
+cor.matrixd <- cor(data[1:2])
+cor.matrixd
+```
+
+```{r}
+summary(LIV_user_relationship)
+```
+
+```{r}
+RSE <- 7.101
+error <- RSE/mean(y)
+error
+```
+
+```{r}
+a <- data.frame(x = 10)
+result <- predict(LIV_user_relationship, a)
+print(result)
+```
+
+```{r}
+linear_plot <- ggplot(data, aes(x = x, y = y)) + 
+  geom_point( color="#69b3a2") +
+  geom_smooth(method=lm , color="red", se=TRUE) +
+  theme(legend.position = "none") +
+  xlab("Number of LIV Golf Tweets") +
+  ylab("Number of User Tweets") +
+  labs(title = "Linear Regression Model of LIVGolf and User Generated Content",
+       subtitle = "November 8th to November 29th 2022",
+       caption = "Data Source: Twitter search for #LIVGolf")
+linear_plot 
+```
+
+### Conclusion
+
+If all other variables remain constant, there is a connection between how many tweets LIV Golf creates and the response from users on the platform. While this model describes the a relationship between users and LIVGolf twitter activity, from a business perspective, it paints the picture of an organization failing to motivate its followers to talk about their product and attract additional followers. If LIVGolf created zero tweets, it would be reasonable to expect 23 user generated tweets. However, as they become more active on the platform, their efforts are not returned at a very high rate, especially when considering the amount of followers they have. If users generate 10 tweets, it is reasonable to expect 34 user tweets, which may not be worth their time. The model created during this study creates an average prediction error rate of 28%.  
