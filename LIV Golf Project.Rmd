@@ -240,7 +240,7 @@ final_data$favorite_ratio <-
 final_data$reception <- apply(final_data[14:15], 1, mean, na.rm = TRUE)
 ```
 
-```{r, warning=FALSE}
+```{r}
 #Transform the text viable into a usable form.
 text_corpus <- Corpus(VectorSource(final_data$text))
 text_corpus <- tm_map(text_corpus, tolower)
@@ -292,7 +292,7 @@ final_source %>% group_by(source) %>% count(source, sort = TRUE)
 final_data %>% group_by(screen_name) %>% count(screen_name, sort = TRUE)
 ```
 
-```{r, results=HIDE}
+```{r, include=FALSE}
 #Identify distribution of tweets over time.
 final_data %>% group_by(day_created) %>% count(day_created, sort = FALSE)
 day_created
@@ -465,7 +465,7 @@ LIV_followers_plot <- LIV_followers_count %>%
 LIV_followers_plot + scale_x_continuous(breaks =                                      c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29))
 ```
 
-```{r}
+```{r, include=FALSE}
 diagnose_outlier(only_users_reception)
 ```
 
