@@ -39,7 +39,7 @@ final_data <- read.csv("final_data")
 
 The purpose of this process will be to remove all unnecessary variables not required for research as well as create additional variables of sentiment and reception, then split the data frame based on the source of each tweet.
 
-```{r}
+```{r, include=FALSE}
 #Remove duplicate variables
 final_data <- subset(final_data, select = -c(X, name, account_created_at))
 
