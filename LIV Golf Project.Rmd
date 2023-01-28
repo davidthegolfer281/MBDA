@@ -27,6 +27,7 @@ library(tidyr)
 library(glue)
 library(igraph)
 library(syuzhet)
+library(flexdashboard)
 ```
 
 ```{r, include=FALSE}
