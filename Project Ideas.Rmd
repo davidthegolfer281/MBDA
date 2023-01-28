@@ -1,5 +1,5 @@
 ---
-title: "MBDA 730 Week 3 Brainstorming"
+title: "MBDA 730 Week 3 Homework"
 author: "David Curtis"
 output: 
   html_document:
@@ -9,4 +9,26 @@ output:
     code_download: true
 ---
 
+## Final Project Introduction
 
+The final project for MBDA 730 requires students to explore an ongoing series of projects published by the [New York Times Privacy Project](https://www.nytimes.com/series/new-york-times-privacy-project). 
+
+### Part 1.
+
+The project is required to be a RMD file that compares and critiques the ethics and fairness framework among three projects.  Within the submission students are required to provide a summary of each project, identify unwanted or unexpected consequences of each project.  Identify the impacts from each of the consequences. Reference the source of harm from the consequences. Finally, based on the recommendation systems in AI provide recommendations for implementation into each project.
+
+### Part 2.
+
+Part 2 of the final project asks students to reference current efforts to address issues presented in Part 1 of the assignment.  Current projects can be found by exploring the [Data Privacy Lab](https://dataprivacylab.org/projects/).
+
+Based on the projects selected from Part 1 (facial recognition, policy gaps, and genomic privacy) pick three reserach projects that are attempting to address those data privacy concerns.  This section of the paper should describe how to New York Times Project and the Privacy Project are related and explain how methods presented in the Privacy Project will help solve Privacy issues presented in the New York Time Project.
+
+## Homework Assignment 2
+
+I would like to explore re-identification as presented in the New York Times Privacy Project from referencing a repository of current reserach projects that address data privacy.  
+
+To address data privacy issues regarding facial recognition software, I will explore the project [You're In a Police Line Up Right Now](https://www.nytimes.com/2019/10/15/opinion/facial-recognition-police.html).  The privacy lab project that outlines recommendations for implementation of robust de-identification measures is the paper [Preserving Privacy by De-Identifying Facial Images](https://dataprivacylab.org/dataprivacy/projects/video/paper.pdf). 
+
+To adress the issue of lagging privacy protection policy in the United States, I have found the project [The Government Protects our Food and Cars. Why Not our Data?](https://www.nytimes.com/2019/11/02/sunday-review/data-protection-privacy.html). The data privacy lab project that adderesses the need for a HIPPA privacy protection legistlation is [Patient Privacy Risks in U.S. Supreme Court Case Sorrell vs. IMS Health](https://dataprivacylab.org/projects/identifiability/pharma2.pdf).
+
+To address genomic privacy I will explore the project [Why Are You Publicly Sharing Your Child's DNA Information](https://www.nytimes.com/2020/01/02/opinion/dna-test-privacy-children.html).  The focus of this section will address how genomic privacy is required for anonymity.  The privacy lab project that presents solutions for the issue is [An Evaluation of the Current State of Genomic Data Privacy Protection Technology and a Roadmap for the Future](https://dataprivacylab.org/dataprivacy/projects/linkage/lidap-wp19.pdf).
