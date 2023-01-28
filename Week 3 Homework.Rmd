@@ -25,10 +25,36 @@ Based on the projects selected from Part 1 (facial recognition, policy gaps, and
 
 ## Homework Assignment 2
 
-I would like to explore re-identification as presented in the New York Times Privacy Project from referencing a repository of current reserach projects that address data privacy.  
+I would like to explore facial recognition, data privacy legislation, and genomic privacy during my final project. The three topics, like most, are intertwined with each other.  I will address these issues through a tiered approach of importance.  First, I believe legislation and regulations will enable government and private privacy protection measures as seen through how hospitals protect patient information, how government and businesses use facial recognition, and creating genomic privacy.  Only though legislation will it be reasonable to assume there will be meaningful protections for how data is shared, de-identified, and collected in the governmental and private domains.
 
-To address data privacy issues regarding facial recognition software, I will explore the project [You're In a Police Line Up Right Now](https://www.nytimes.com/2019/10/15/opinion/facial-recognition-police.html).  The privacy lab project that outlines recommendations for implementation of robust de-identification measures is the paper [Preserving Privacy by De-Identifying Facial Images](https://dataprivacylab.org/dataprivacy/projects/video/paper.pdf). 
+### Privacy Protection Laws and Regulations
+To adress the issue of lagging privacy protection policy in the United States, I have found the project [The Government Protects our Food and Cars. Why Not our Data?](https://www.nytimes.com/2019/11/02/sunday-review/data-protection-privacy.html) (Singer, 2019). Within the New York Times article there is no shortage of data sources to justify the argument from the author that the United States requires more robust data privacy legislation.  The author references famous data security breaches like what occured with Strava location data, Apple facetime security, and Fitbit vulnerabilities.  However, the bulk of the authors argument circulates around the severe inquiry between what the government regulates vs. how it regulates data.  The culmination of the authors argument is that a seperate independent agency similar to the Food and Drug Administration (FDA) should be created to address how the government oversees how data is protected within the United States.
 
-To adress the issue of lagging privacy protection policy in the United States, I have found the project [The Government Protects our Food and Cars. Why Not our Data?](https://www.nytimes.com/2019/11/02/sunday-review/data-protection-privacy.html). The data privacy lab project that adderesses the need for a HIPPA privacy protection legistlation is [Patient Privacy Risks in U.S. Supreme Court Case Sorrell vs. IMS Health](https://dataprivacylab.org/projects/identifiability/pharma2.pdf).
+The data privacy lab project that adderesses the need for a HIPPA privacy protection legistlation is [Patient Privacy Risks in U.S. Supreme Court Case Sorrell vs. IMS Health](https://dataprivacylab.org/projects/identifiability/pharma2.pdf) (Sweeney, n.d.).  Just like the New York Times Privacy Project article, the court case found that there was a lack in regulations in how HIPPA data is protected to prevent re-identification and how re-identification could negatively impact society.  
 
-To address genomic privacy I will explore the project [Why Are You Publicly Sharing Your Child's DNA Information](https://www.nytimes.com/2020/01/02/opinion/dna-test-privacy-children.html).  The focus of this section will address how genomic privacy is required for anonymity.  The privacy lab project that presents solutions for the issue is [An Evaluation of the Current State of Genomic Data Privacy Protection Technology and a Roadmap for the Future](https://dataprivacylab.org/dataprivacy/projects/linkage/lidap-wp19.pdf).
+### Facial Recognition
+To address data privacy issues regarding facial recognition software, I will explore the project [You're In a Police Line Up Right Now](https://www.nytimes.com/2019/10/15/opinion/facial-recognition-police.html) (Garvie, 2019). The article presents vignettes that show common pitfalls from the misuse, bias, and protection of facial recognition in application.  While the video presents other data ethics concerns such as informed consent of how our data is shared, and general anonymity concerns, the focus is how law enforcement leverages facial recognition technology taken from photos collected from when Americans apply for a drivers license. 
+
+The privacy lab project that outlines recommendations for implementation of privacy protection with facial regocnition technology is [Preserving Privacy by De-Identifying Facial Images](https://dataprivacylab.org/dataprivacy/projects/video/paper.pdf) (Newton, 2003). In the project, algorithms are proposed that continue to allow the benefit of facial recognition technology while continuing to prevent potential harms that can occur from its use.  The author's present several methods to de identify facial images without removing the value of facial regocntion technoliogy by understanding that methods such as a completely pixelated face would render a systems useless.  
+
+
+### Genomic Privacy
+To address genomic privacy I will explore the project [Why Are You Publicly Sharing Your Child's DNA Information](https://www.nytimes.com/2020/01/02/opinion/dna-test-privacy-children.html) (Bala, 2019).  The focus of this section will address how genomic privacy is required for anonymity and illustrate the pitfalls from release of genomic information.  In the New Yor Times Privacy Project article the author presents dangers from employing services from companies like 23 and Me, Map my Gene, and Org3n.  The author explains how by utilizing the services, consumers inadvertently share familal information and erode the privacy of the consumer's family.  
+
+The privacy lab project that presents solutions for the issue is [Why Pseudonyms Don’t Anonymize: A Computational Re-identification Analysis of Genomic Data Privacy Protection Systems](https://dataprivacylab.org/dataprivacy/projects/linkage/lidap-wp19.pdf) (Malin, 2003).  While the New York Times Project presents dangers in how family members can be identified through genomic testing, the Privacy Project article aims to present methods to protect genomic data from re-identification attacks.  The methods presented in this paper strenthen how genomic data is protected without removing the value from analysis of genome data.
+
+## References
+
+Bala, N. (2020). Why Are You Sharing Your Child's DNA Information? New York Times. Retieved January 28, 2023 from https://www.nytimes.com/2020/01/02/opinion/dna-test-privacy-children.html
+
+Garvie, C. (2019). You're In A Police Lineup Right Now. New York Times. Retrieved January 27, 2023 from https://www.nytimes.com/2019/10/15/opinion/facial-recognition-police.html
+
+Malin, B. (2003). Why Pseudonyms Don’t Anonymize: A Computational Re-identification Analysis of Genomic Data Privacy Protection Systems. Carnegie Melon University. Retrieved January 28, 2023 from https://dataprivacylab.org/dataprivacy/projects/linkage/lidap-wp19.pdf
+
+Newton, E., Sweeney, L., Malin, B. (2003). Preserving Privacy by De-Identifying Facial Images. Carnegie Melon University. Retrieved January 27, 2023 from https://dataprivacylab.org/dataprivacy/projects/video/paper.pdf
+
+Singer, N. (2019). The Government Protects out Food and Cars. Why Not Our Data? New York Times. Retrieved January 26, 2023 from https://www.nytimes.com/2019/11/02/sunday-review/data-protection-privacy.html
+
+Sweeney, L. (n.d.). Patient Privacy Risks in U.S. Supreme Court Case Sorrell vs. IMS Health. Privacy Lab Project. Retrieved January 26, from https://dataprivacylab.org/projects/identifiability/pharma2.pdf
+
+
