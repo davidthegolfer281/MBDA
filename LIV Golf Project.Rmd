@@ -807,7 +807,6 @@ Bigram Network - The Bigram network shows that the words used in speaking about 
 The purpose of this section is to understand if there is any connection between how well a tweet is received and its overall sentiment. This section should answer the question if the most negative or most positive tweets are more or less likely to be the content that is engaged with the most.
 
 ```{r}
-
 correlation_test <- subset(final_data, select = -c(day_created, screen_name, location, followers_count, friends_count, listed_count, favourites_count, statuses_count, source, retweet_count, retweet_ratio, favorite_ratio, favorite_count, text_clean))
 ```
 
