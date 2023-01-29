@@ -4,7 +4,10 @@ output: flexdashboard::flex_dashboard
 ---
 Introduction
 =====================================
-  This project aims to summarize measurements of sentiments, emotions, and reception and model potential levels of user-generated content on Twitter about the LIV Golf professional golf series between November 8th, 2022, and November 30th, 2022. Since the creation of a well-funded competing golf league to the PGA Tour, the golfing world has been split between two camps, those supportive of the newly established professional golf league and those strongly opposed to the league. While the reasons for resistance to the disruptive golf league vary, the 645 Twitter observations creating the dataset used in this study were gathered exclusively in the English language, represent a sampling of users distributed globally, and aim to represent users' opinions on both sides of the contentious topic. This study takes place after the first year of the competing golf league and captures conversations about the golf league on the Twitter platform for analysis. Through exploratory and descriptive analytics conducted in "R," the research will better understand the LIV Golf brand perception, followers of LIV Golf, and the reception of the competing golf league into the sporting world. At the time of this paper's writing, there are many editorial articles about the LIV Golf vs. PGA Tour debate and the future of golf globally; however, this study is the only known analysis of sentiment, opinion, and prediction of LIV Golf through Twitter analysis.
+
+### Introduction 
+
+This project aims to summarize measurements of sentiments, emotions, and reception and model potential levels of user-generated content on Twitter about the LIV Golf professional golf series between November 8th, 2022, and November 30th, 2022. Since the creation of a well-funded competing golf league to the PGA Tour, the golfing world has been split between two camps, those supportive of the newly established professional golf league and those strongly opposed to the league. While the reasons for resistance to the disruptive golf league vary, the 645 Twitter observations creating the dataset used in this study were gathered exclusively in the English language, represent a sampling of users distributed globally, and aim to represent users' opinions on both sides of the contentious topic. This study takes place after the first year of the competing golf league and captures conversations about the golf league on the Twitter platform for analysis. Through exploratory and descriptive analytics conducted in "R," the research will better understand the LIV Golf brand perception, followers of LIV Golf, and the reception of the competing golf league into the sporting world. At the time of this paper's writing, there are many editorial articles about the LIV Golf vs. PGA Tour debate and the future of golf globally; however, this study is the only known analysis of sentiment, opinion, and prediction of LIV Golf through Twitter analysis.
 
   The LIV Golf field is currently comprised of a global representation of players of varying abilities at different points in their sporting careers. Notable participants in the golf league are Major Championship winners and relatively well-known names in the golfing world, like Sergio Garcia, Dustin Johnson, Brooks Koepka, Phil Mickelson, Bryson DeChambeau, and the current number one player in the world, Cam Smith. LIV Golf has spent exorbitant money to create the league and to gain the consideration of these accomplished players to depart from their current careers on the PGA Tour. It is reported that the total salaries of the players, as mentioned earlier, are estimated at greater than 750 million US dollars. While only some participants on the 54-player roster have received the same compensation as some of the most popular players in the sport, the contract is guaranteed income and is not dependent on performance. Additionally, the total purse of all LIV Golf events is 225 million dollars (Camenker, 2022). Even when excluding the lesser-known players and operating expenses, over one billion dollars has been spent by organizers to create the roster and establish LIV Golf.
 
@@ -808,6 +811,8 @@ Word Network
 Column 
 -------------------------------------
 
+### Word Network Analysis
+
 The bigram count network counted and ranked the usage of paired words to determine which word pairs are used most frequently. By conducting this step during research, the study can determine far more information about tone, emotion, sentiment, and their connection to LIV Golf. While previous analysis began to form the understanding of the conversation about LIV Golf on Twitter during the observation period, the bigram network allows the study to create additional insight. Figure 5.11 illustrates the bigram network of word frequency from user-generated content. Displayed in the network are the most common word pairings from the text variable of user tweets. 
 
 The bigram chart illustrates a complex network displaying varying opinions from Twitter users. Some networks do not provide additional insight into user opinions about LIV Golf. For example, the network pair of “best players” does not allow this study to conclude if Twitter users believe the best players reside on the PGA Tour or the LIV Tour or if it represents statements completely unrelated to the two golf leagues. The only conclusion is that when the word best, and the word players were used, they were most frequently used with each other. Word pairings of “join-LIV-will” likely express conversation about additional players joining the golf league. Still, it is impossible to determine if the users are conveying positivity or negativity with the word pair.
@@ -909,6 +914,8 @@ Linear Regression
 Column 
 -------------------------------------
 
+### Linear Regression Analysis
+
 Research within this study aims to understand if user activity on Twitter about LIV Golf is the result of genuine interest in the league or is the response to LIV Golf activity on the platform. The study asks if LIV Golf were to stop creating content on Twitter, would user activity, awareness of the league, and general interest subside, or is there enough interest present in the league to sustain itself? To answer this question, the study created a linear regression model measuring user activity levels based on the amount of activity created from LIV Golf.
 
 Taken from the results of the linear regression model was the intercept of 23.687 and a coefficient of 1.031.  To test the model's accuracy, the study took the residual standard error (RSE), 7.101, divided by the average of user-generated content.   The formula used to determine the error rate was RSE/Mean User Content.  The model created in this study has an error rate of 28%, which means that 72% of the time, user observations will fit within this model.  
@@ -938,10 +945,14 @@ linear_plot
 Conclusion
 ===================================== 
 
+### Conclusion
+
 This study aimed to understand and measure sentiment, opinions, and reception, then model the potential amount of conversation about LIV Golf on Twitter. By conducting a thorough analysis of the sentiment of content about LIV Golf, the study can conclude that even though the establishment of the competing golf league has divided the golfing world, the conversation remains largely peaceful. The study found evidence of resistance to LIV Golf through textual analysis because of the connection between the organization and the government of The Kingdom of Saudi Arabia. While LIV Golf has spent billions of dollars creating a competing golf league, Twitter users' conscience and awareness of the practice of sports washing remained a significant topic of conversation between the 8th to 29th of November 2022. Even though the number of followers increased during the study, accusations of LIV Golf acting as a mechanism for a foreign government to improve its global reputation will likely limit its speed of acceptance.
 
 References
 ===================================== 
+
+### References
 
 Argawal, A., Xie, B., Vovsha, I., Rambow, O., Possonneau, R., (2011). Sentiment Analysis of Twitter Data. Retrieved November 22, 2022, from https://aclanthology.org/W11-0705.pdf 
 
