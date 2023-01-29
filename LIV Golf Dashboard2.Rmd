@@ -1,7 +1,14 @@
 ---
-title: "LIV Golf Analysis"
+title: "Twitter Analysis of LIV Golf in November of 2022"
 output: flexdashboard::flex_dashboard
 ---
+Introduction
+=====================================
+  This project aims to summarize measurements of sentiments, emotions, and reception and model potential levels of user-generated content on Twitter about the LIV Golf professional golf series between November 8th, 2022, and November 30th, 2022. Since the creation of a well-funded competing golf league to the PGA Tour, the golfing world has been split between two camps, those supportive of the newly established professional golf league and those strongly opposed to the league. While the reasons for resistance to the disruptive golf league vary, the 645 Twitter observations creating the dataset used in this study were gathered exclusively in the English language, represent a sampling of users distributed globally, and aim to represent users' opinions on both sides of the contentious topic. This study takes place after the first year of the competing golf league and captures conversations about the golf league on the Twitter platform for analysis. Through exploratory and descriptive analytics conducted in "R," the research will better understand the LIV Golf brand perception, followers of LIV Golf, and the reception of the competing golf league into the sporting world. At the time of this paper's writing, there are many editorial articles about the LIV Golf vs. PGA Tour debate and the future of golf globally; however, this study is the only known analysis of sentiment, opinion, and prediction of LIV Golf through Twitter analysis.
+
+  The LIV Golf field is currently comprised of a global representation of players of varying abilities at different points in their sporting careers. Notable participants in the golf league are Major Championship winners and relatively well-known names in the golfing world, like Sergio Garcia, Dustin Johnson, Brooks Koepka, Phil Mickelson, Bryson DeChambeau, and the current number one player in the world, Cam Smith. LIV Golf has spent exorbitant money to create the league and to gain the consideration of these accomplished players to depart from their current careers on the PGA Tour. It is reported that the total salaries of the players, as mentioned earlier, are estimated at greater than 750 million US dollars. While only some participants on the 54-player roster have received the same compensation as some of the most popular players in the sport, the contract is guaranteed income and is not dependent on performance. Additionally, the total purse of all LIV Golf events is 225 million dollars (Camenker, 2022). Even when excluding the lesser-known players and operating expenses, over one billion dollars has been spent by organizers to create the roster and establish LIV Golf.
+
+  The sovereign wealth fund of Saudi Arabia finances LIV Golf. A sovereign wealth fund is a state-owned investment that invests in real and financial assets such as stocks, bonds, real estate, private equity funds, and hedge funds. A persistent narrative in media reporting on the challenging golf series is that creating the golf league is an effort by the Saudi Arabian government to conduct large-scale sports washing.  The term sports washing describes efforts by individuals, corporations, or governments leveraging the appeal of sports to improve sentiment toward their socially unacceptable practices (Wojtowicz, 2022). The most famous example of sports washing occurred in the 1936 Olympic Games hosted by Germany and the Nazi regime. The German government made a significant effort to convey a modern, civil, and ethical society to the rest of the world. Other instances of sports washing occurred in the Moscow Olympics in 1980, Beijing Olympics in 2008, Sochi Olympics in 2014, The World Cup in Italy in 1934, The World Cup in Argentina in 1978, and The World Cup in Qatar in 2022. Each event allows a global observer to become less focused on social issues that would tarnish their reputation and become more focused on the positives of sport.  
 
 Frequency
 ===================================== 
@@ -311,13 +318,11 @@ source_by_type
 
 ### Frequency Analysis
 
-The purpose of the frequency analysis is to determine to amount of conversation over time about LIV golf and to determine how much of the conversation is contributed to LIVGolf creating the conversation, media reporting on LIVGolf, and user generated content about the LIVGolf topic.
+A crucial step in the exploratory analysis phase of research was to build upon previous actions identifying the primary source of LIV Golf content. During this step of the analysis, the study sought to explore the frequency at which Twitter users created content associated with LIV Golf and when LIV Golf made content each day during the observation period. Extracted from this research step are the number of times LIV Golf authored content and the number of times users contributed to the overall conversation. As one research question in this study aims to understand the level at which LIV Golf motivates users to engage with content and add to the conversation, frequency analysis establishes the foundation for future linear regression modeling in this study.
 
-Media Contributors- Media reporting about LIVGolf saw a peak from the 13th to the 17th of November. Additional analysis is required to determine the topic of conversation for media tweets.
+Immediate conclusions from this research step are that the media group was most active during the observation period between the 13th and 17th of November, and the most active date from all groups occurred on the 29th of November.  Additionally, LIV Golf didn't create content daily, and the frequency of tweets is not normally distributed.
 
-All Contributors - The highest level of activity seen on the Twitter platform from LIVGolf was on the 17th and 14th of November.
-
-User Contribution - The highest level of activity seen on the platform from users was on the 18th and of November. Additional analysis could be conducted to understand content on the 18th of November to greater understand what motivated users to post about LIVGolf. LivGolf Contribution- The highest total number of tweets from LIvGolf occurred on the 17th of November.
+The cumulative relative frequency analysis shows that the media’s most active date relative to the whole creates close to 25% of all conversations on Twitter about LIV Golf on several dates during the observation period. The study also identified the user group as the most active group during the observation period by a significant margin. Finally, LIV Golf created the least amount of conversation about the league. Research conducted through frequency analysis is the foundation for future predictions of user activity. Conclusions formed from this research phase contribute to understanding if user activity levels are dependent on activity levels from LIV Golf and assist in determining interest in the league among Twitter users.
 
 Column {.tabset}
 -------------------------------------
@@ -336,7 +341,7 @@ histogram_all_plot <- ggplot(source_by_type, aes(x = day_created,
 histogram_all_plot + scale_x_continuous(breaks =                                          c(8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)) 
 ```
 
-### Relative Frequency Plot
+### Cumulative Relative Frequency
 
 ```{r}
 rel_freq_plot <- ggplot(source_by_type, aes(x = day_created, 
@@ -378,11 +383,13 @@ Column
 
 ### Reception Analysis
 
-Reception of the tweet is measured as a calculation of engagements while taking into account that the amounts of followers vary between users and vary over time. For the purposes of this research, reception can equate to popularity of opinion. Therefore, measuring reception is crucial to understanding dominant viewpoints about LIVGolf among users.
+To understand the reception of LIV Golf content among Twitter users, reception metrics needed to be created. Nested within Twitter analytics are metrics that allow users to understand how their content resonates with users on the platform. Unfortunately, while many of the metrics are valuable to the user, they provide little help for the research as they are generated based on a user’s total amount of content. For example, if a user has created 1,000 tweets since their account creation, all analyses that Twitter provides measure engagements against the totality of a user’s activity and not specific content.
 
-Reception is the mean of retweets \* 2 divided by the number of followers and favorites divided by the number of followers times 100. This calculation accounts for the reach achieved by the number of followers as well as accounting for what occurs when a follower retweets content. The number of users that could potentially interact with content becomes larger as a user's followers retweet content, thus, there is potential for content to be seen by a larger number of users than only followers.
+For this research project, one focus area is the reception of LIV Golf-generated content only during the observation period and therefore needed to create its own means of measuring reception. The reception score used in this study measures user engagement through retweets and favorites. By creating this metric, the analysis can now establish how willing Twitter users were to engage with content, regardless of their opinion about LIV Golf. A Twitter user can retweet content for numerous reasons. The research in this study does not attempt to correlate why the content was shared but only measures the amount users were motivated to share and engage with content.  
 
-The purpose of this section will be to understand the level of reception to LIVGolf generated content during the observation period. Then analysis will be conducted to determine if LIV Golf content is either growing in popularity, decreasing in popularity, or remaining relatively stable. A point of comparison is the mean reception score of content generated by users. If significantly different, future analysis could be conducted to understand the message behind content with higher or lower reception scored content.
+The formula to generate the reception score (RS) required gathering the ratios measured against the total number of followers for an account. The purpose of the reception score is to determine the amount that content motivated viewers of the content to engage through likes and retweets on the platform. For this research, the reception score was created first by understanding that every follower has the potential to retweet content with each of their friends and followers. Therefore, the potential number of users that could be exposed to content is elevated based on the number of followers they have. For example, a user that creates content for a follower base of 15 people has significantly less reach than a user like LIV Golf, with followers totaling more than 200,000 people. Therefore, it was determined that considering potential reach to generate the retweet ratio was important in measuring engagement. 
+
+The formula used to create the retweet ratio (RR) for every tweet is the number of retweets times two divided by the number of author account followers times 100. The multiplication of the number of retweets accounts for the possibility that every follower can share LIV Golf content with their followers. A retweet amplifies content through sharing and when assessing reception, the retweet ratio is more important that the favorite ratio.  If content is shared and amplified, it is indicative of content that resonates more with the user. The formula used to create the favorite ratio (FR) is the number of times a tweet was favorited by users divided by the number of followers of the author’s account times 100. Finally, the mean value of each reception score was created by a mean of RR and FR and attached to each tweet in the data set to finalize the reception score.
 
 Column {.tabset}
 -------------------------------------
@@ -490,13 +497,15 @@ Column
 
 ### Sentiment Analysis
 
-The purpose of this section is to understand the sentiment of opinion being used in tweets created by LIVGolf and by user generated content. The goal is to identify main ideas or topics of conversation to further guage reception of the LIVGolf product. Additionally, by generating the sentiment variable, research identify overall tone of the conversation as being either positive or negative.
+At the onset of the study, it was understood that sentiment scores are not a reflection of opinion either advocating for LIV Golf or expressing disapproval of the emerging league. Sentiment values are derived through a numeric value attached to each word in the tweet based on a comparison of used words from a known dictionary, then a mean of the scores of the words creates the sentiment score. The sentiment scores equate to the tone of conversation through the language used in the observation. To accomplish thorough understanding about the tone of conversation about LIV Golf, the study extracted sentiment scores for the entire data set. Then the data set was subset to create data frames of only user-generated and LIV Golf-generated content.
 
-Sentiment of the entire dataset reveals that the 16th and 19th of November resulted in the dates with the lowest sentiment values. Even when the dataset of tweets was separated by author, the 16th and 19th had the lowest sentiment scores.
+The purpose of one research question aims to understand the tone of conversation among users about LIV Golf. Therefore, the study only explored the sentiment of user-generated content and excluded LIV Golf-authored content in sentiment analysis. Aside from isolating the author of the content, additional separation was accomplished by grouping sentiment scores chronologically during the observation period. The user sentiment scatter plot illustrates each observation of user-generated content for each day the tweet was authored. By conducting this exploratory process, the research aims to understand if negative, positive, or neutral tweets dominate the conversation, and if so, what dates does this occur?
 
-The 24th of November resulted in the highest mean sentiment score for all tweets and when analyzed by source. The violin plot and boxplot illustrates a relatively tight clustering of sentiment scores without any outliers.
+The boxplot illuminates several critical aspects of the user sentiment over time in conjunction with establishing mean sentiment values per day of observation. Evident in the boxplot is the number of outliers that reside significantly away from the mean. For example, on November 22nd, there were four total outliers; three scored in the negative range, and one observation was significantly higher than the mean sentiment score. In addition, analysis shows that mean sentiment scores are neutral or positive even though some sentiments are very positive or negative. The boxplot creates additional insight into the tone of the conversation, but this study aims to understand trends among Twitter users about the LIV Golf topic.
 
-The violin plot illustrates the range of sentiment scores and the amount of occurrences where observations are clustered. For example, the 22nd of November experienced a large amount of content with sentiment score close to zero, therefore, the violin is wider at that score. The 22nd also reveals height based on the presence of outliers that were significantly far away from the mean. The fewer the amount of outliers, and the wider the plot reveals a more consistent sentiment score for that date in the observation period. The 8th, 9th, and 13th experienced no outliers in sentiment.
+THe violin chart contains additional evidence of the varying degree of user sentiment throughout the observation period and creates more refined conculsions from the data set.  On November 25th, user content created observations with sentiment scores varying the least amount compared to any other date.  Conversely, by isolating November 21st, there is evidence to state that user-generated content was the most inconsistent throughout the observation period creating the tallest violin in Figure 5.5.  Regardless, analysis can answer the second research question about the sentiment of user content during the observation period.  Through exploratory analysis, the tone of language used in content associated with LIV Golf is mainly positive, regardless of outliers.  
+
+The conclusion that the overall tone of conversation is largely neutral is supported by evidence from the mean user sentiment chart. However, it is important to understand that sentiment does vary among users, and varies between content created by LIV Golf and original user generated content.
 
 Column {.tabset}
 -------------------------------------
@@ -610,11 +619,15 @@ Column
 
 ### Emotion Analysis
 
-The purpose of this section is to understand the emotions conveyed through language analysis of the text in observed content.
+While it is meaningful to understand the tone of the conversation about LIV Golf, research required additional analysis to gain further insight into the opinions expressed during the observation period. The study conducted emotion analysis to answer research questions seeking to understand feelings expressed in Twitter content about LIV Golf on data frames of LIV Golf content and user-generated content. The decision to conduct research in isolated data frames was to create more refined conclusions. The conclusion from this executing emotion analysis in this manner is that the study can understand the differences between the emotions used in LIV Golf content and Twitter user content. Had the data emotion analysis been conducted on the entire data set, some of the LIV Golf emotions would have impacted conclusions about user emotions.
 
-LIVGolf - As expected, LIVGolf emotion count is indicative of an organization attempting to gather followers, spread awareness of their brand, and is largely positive. The LIVGolf content is expressing anticipation for future events with an overall positive emotion.
+Like the sentiment analysis process of scoring words used in a Tweet against a known dictionary, emotion analysis leverages similar techniques. However, words are binned and cataloged based on the emotion expressed instead of collecting tonal information about the lexicon. This process is used to understand the frequency of words used across ten distinct feelings: anger, anticipation, disgust, fear, joy, negative, positive, sadness, surprise, and trust. Emotion analysis gathers each word in a tweet throughout the collection period and stores them in each emotion bin.  
 
-Users - When analyzing user generated content, the dominant emotion is happiness but there is a significant increase in the negativity conveyed in the tweet. Additionally, emotions like sadness, anger, and fear also increased.
+The LIV Golf Emotion chart presents a histogram of the words used in LIV Golf authored content. The x-axis in the LIV Golf Emotion Chart is each bin of emotions, and the y-axis is the number of times the words conveying those emotions were counted from the data set of LIV Golf content. This analysis shows that LIV golf generally conveys a positive message with words used to express anticipation potentially about future events, singings, or initiatives. Negative word usage from the bins of disgust, fear, negative, and sadness is the least used in LIV Golf content.
+
+The User Emotion Chart graphically illustrates the results of the analysis of user-generated content among the ten established emotions. Evident within the results is that user-generated content remains primarily positive. The feelings of anticipation, trust, and positivity are three of the four highest aggregate emotions. However, there is a notable increase in negative emotions from user-generated content. The feelings of sadness and anger occur at the same frequency as surprise. Words conveying fear and negativity present themselves at a far higher frequency than observed in LIV Golf content. The conclusion drawn from this research step illuminates that even though sentiment about LIV Golf is mainly positive, the expressed feelings convey mixed emotions among Twitter users contributing to the conversation. Additionally, users convey negative emotions far more regularly than LIV Golf.
+
+An important consideration when interpreting the results of emotion analysis is that the frequency of emotion does not necessarily reflect advocacy or disdain for LIV Golf as an organization but reflects the feelings used in the lexicon of observations. The research does not aim to understand the allegiance of Twitter users between the PGA Tour and LIV Golf and is instead focused on capturing the emotion of content. Therefore, it is reasonable to conclude that just as it was observed in sentiment analysis, there is not a dominant emotion displayed in Twitter content attached to LIV Golf during the observation period. Users show positivity and negativity just as they express positive and negative sentiments. After additional analysis and informed by an understanding of the emotions and sentiments of Twitter users, the study will present potential future challenges to LIV Golf.
 
 Column {.tabset}
 -------------------------------------
@@ -696,11 +709,14 @@ Column
 
 ### Text Analysis
 
-The purpose of this section is to further understand the conversation and topics discussed in tweets from LIVGolf and from users during the collection period.
+By executing textual analysis of the content in isolated data frames, this study can conclude the main ideas and topics of conversation based on the frequency of their use in LIV Golf authored content and user-generated content. The output of the analysis was the graphical representation of word usage illustrated in word clouds and through a bigram chart showing joined words, further illuminating the ideas and opinions of users. The LIV GOlf Worldcloud illustrates keywords measured by their frequency of use in LIV Golf authored content. Captured within the word cloud is the number of times that a specific word was used in all LIV Golf tweets. The larger the word in the illustration, the more frequently it was used; therefore, the study can deduce that those words express the dominant ideas or topics of conversation.
 
-Wordcloud LIVGOLF - Content generated by LIV Golf is largely comprised on words indicative of fostering excitement and attention to the series.
+From the LIV Golf Wordcloud, it is evident that LIV Golf communicates to Twitter users content advertising the competing league, expressing opportunities to attend events, and results from past events. Highlighted in the word cloud are announcements of the Australian city of Adelaide recently announced to host an additional event to the LIV Golf season. Expressed through the words “read,” “prices,” “tickets,” and “click” are efforts to engage with Twitter users to motivate them to attend events, visit sites that report on LIV Golf, and increase overall interest in the league. The word cloud of LIV Golf authored content illuminates some aspects of the conversation about the league but identified in frequency analysis; LIV Golf content accounts for roughly five percent of the total conversation. Therefore, the study can create more refined conclusions about topics and opinions about the conversations through textual analysis of user-generated content.
 
-Wordcloud Users - Users expose a greater amount of word usage and emotions behind those words than LIV Golf. A high frequency of using PGA Tour by users can be indicative of either support or resentment for the competing league and may not necessarily advocate for either league. Additionally, there are word choices by users that very significantly from LIV Golf as they have attempted to distance themselves from Saudi Arabian connection. The users continue to talk about that topic.
+The User Wordcloud illustrates the frequency of word usage from Twitter users in tweets associated with the LIV Golf topic from November 8th to November 29th, 2022. Compared to the word choices used by LIV Golf, the conversation about the emerging golf league is somewhat divided. In all tweets authored by LIV Golf, the words PGA and PGA Tour were never used; only users reference the established golf league. The word cloud does not denote allegiance, either supporting or opposing either league, but it is assumed that users are comparing LIV Golf to the PGA Tour.
+
+Twitter users also frequently used the word “players.”  In the LIV Golf content, the organization mentions players by their names to announce signings or results of a tournament. Still, in user-generated content, users are binning players as a group. It is assumed that users are talking about players on the PGA Tour or LIV Tour as a whole and expressing their opinions about the tour through opinions about players. Finally, within user-generated content, there is a significant usage of the words “Saudi,” “Saudis,” and “money .” The word usage implies that there remains a small but significant amount of content about the LIV Golf tour and its connection to the financial backing by the sovereign wealth fund from the Kingdom of Saudi Arabia. The word cloud and textual analysis do not convey whether users express positivity or negativity from their word choices. Therefore, further research is required to deduce user opinions about LIV Golf relating to its financial connection with the Kingdom of Saudi Arabia.
+
 
 Column {.tabset}
 -------------------------------------
@@ -792,7 +808,11 @@ Word Network
 Column 
 -------------------------------------
 
-Bigram Network - The Bigram network shows that the words used in speaking about LIV Golf represents a very divided user base between accepting LIV for the a sporting league or highlighting its connection to the government of Saudi Arabia.
+The bigram count network counted and ranked the usage of paired words to determine which word pairs are used most frequently. By conducting this step during research, the study can determine far more information about tone, emotion, sentiment, and their connection to LIV Golf. While previous analysis began to form the understanding of the conversation about LIV Golf on Twitter during the observation period, the bigram network allows the study to create additional insight. Figure 5.11 illustrates the bigram network of word frequency from user-generated content. Displayed in the network are the most common word pairings from the text variable of user tweets. 
+
+The bigram chart illustrates a complex network displaying varying opinions from Twitter users. Some networks do not provide additional insight into user opinions about LIV Golf. For example, the network pair of “best players” does not allow this study to conclude if Twitter users believe the best players reside on the PGA Tour or the LIV Tour or if it represents statements completely unrelated to the two golf leagues. The only conclusion is that when the word best, and the word players were used, they were most frequently used with each other. Word pairings of “join-LIV-will” likely express conversation about additional players joining the golf league. Still, it is impossible to determine if the users are conveying positivity or negativity with the word pair.
+
+While some word pairings are mundane and don’t allow for solid conclusions about user opinion, other word pairings are unmistakably connected with user opinions. For example, in the word pairing “human-rights,” the users that authored content with that word pairing are expressing concern for the Kingdom of Saudi Arabia’s reputation regarding human rights. The topic of human rights is distinct and separate from the typical conversation about a sports league and is indicative of Twitter users confronting the topic of sports washing. Another instance where the connection between LIV Golf and the government of the Kingdom of Saudi Arabia presents itself is from the word pairings “Saudi-country-helped-kill-3000-Americans”. During the observation period, these word pairings were used frequently enough to present themselves as major topics of conversation.
 
 Column {.tabset}
 -------------------------------------
@@ -883,6 +903,25 @@ result <- predict(LIV_user_relationship, a)
 print(result)
 ```
 
+Linear Regression
+===================================== 
+
+Column 
+-------------------------------------
+
+Research within this study aims to understand if user activity on Twitter about LIV Golf is the result of genuine interest in the league or is the response to LIV Golf activity on the platform. The study asks if LIV Golf were to stop creating content on Twitter, would user activity, awareness of the league, and general interest subside, or is there enough interest present in the league to sustain itself? To answer this question, the study created a linear regression model measuring user activity levels based on the amount of activity created from LIV Golf.
+
+Taken from the results of the linear regression model was the intercept of 23.687 and a coefficient of 1.031.  To test the model's accuracy, the study took the residual standard error (RSE), 7.101, divided by the average of user-generated content.   The formula used to determine the error rate was RSE/Mean User Content.  The model created in this study has an error rate of 28%, which means that 72% of the time, user observations will fit within this model.  
+
+The study used the equation of y = a + bx to create future predictions based on the analysis in this study through the "predict" function in R.  In the formula, y is the predicted value or the predicted number of user-generated tweets. Next, a is the intercept of the y-axis when the value of y is 0. Next, b is the slope or the amount that changes for every one unit increase in x. Finally, x is the value of the explanatory variable or the number of LIV Golf tweets. During the study, a test was run to predict the number of user-generated tweets based on LIV Golf creating ten tweets in one day. Research can conclude with a 72% level of certainty that if LIV Golf created ten tweets in one day, of the 213,702 followers, 34 tweets would likely be created by users. 
+
+To visually understand the relationship between the independent and dependent variables, a regression line was created and available in the Linear Regression Chart. The y-axis in the chart is the number of user generated tweets, and the x-axis is the number of LIV Golf tweets. The red line in the chart is the regression line created in this study. Shaded in grey in the chart is the standard error or level of certainty based on regression analysis. For prediction purposes, the number of user tweets is expected to fall close to the red line, and there is a reasonable certainty that predictions will fall within the grey-shaded portion of the chart.
+
+Column {.tabset}
+-------------------------------------
+
+### Linear Regression Chart
+
 ```{r, include=TRUE, message=FALSE}
 linear_plot <- ggplot(data, aes(x = x, y = y)) + 
   geom_point( color="#69b3a2") +
@@ -896,3 +935,22 @@ linear_plot <- ggplot(data, aes(x = x, y = y)) +
 linear_plot 
 ```
 
+Conclusion
+===================================== 
+
+This study aimed to understand and measure sentiment, opinions, and reception, then model the potential amount of conversation about LIV Golf on Twitter. By conducting a thorough analysis of the sentiment of content about LIV Golf, the study can conclude that even though the establishment of the competing golf league has divided the golfing world, the conversation remains largely peaceful. The study found evidence of resistance to LIV Golf through textual analysis because of the connection between the organization and the government of The Kingdom of Saudi Arabia. While LIV Golf has spent billions of dollars creating a competing golf league, Twitter users' conscience and awareness of the practice of sports washing remained a significant topic of conversation between the 8th to 29th of November 2022. Even though the number of followers increased during the study, accusations of LIV Golf acting as a mechanism for a foreign government to improve its global reputation will likely limit its speed of acceptance.
+
+References
+===================================== 
+
+Argawal, A., Xie, B., Vovsha, I., Rambow, O., Possonneau, R., (2011). Sentiment Analysis of Twitter Data. Retrieved November 22, 2022, from https://aclanthology.org/W11-0705.pdf 
+
+Camenker, C. (2022). What Does LIV Golf Stand For? Explaining the Name, Meaning of the Saudi-Backed Invitational Tour. Sporting News. Retrieved November 24, 2022, from https://www.sportingnews.com/us/golf/news/liv-golf-tour-name-invitational-series-meaning-explained/ietdisstrdtxa8k3u2s5c5kq 
+
+Chowdury, A. (2012). The State of Twitter Spam. Retrieved November 26, 2022, from https://blog.twitter.com/official/en_us/a/2010/state-of-twitter-spam.html 
+
+Kim, A, Hansen, H., Murphy, J., Richards, A., Duke, J., Allen, J. (December 2013). Methodological Considerations in Analyzing Twitter Data, JNCI Monographs, Volume 2013, Issue 47, Pages 140-146, retrieved November 27, 2022, from https://doi.org/10.1093/jncimonographs/lgt026
+
+Smith, B. (May 31, 2012). Pew Internet & American Life Project. Retrieved November 27, 2022, from http://pewinternet.org/Reports/2012/Twitter-Use-2012.aspx.
+
+Wojtowicz, J., Fruh, K., Archer, A. (2022). Sportswashing: What It Is, Who Does It, and How to Stop It. Liberal Current. Retreived November 25, 2022, from https://www.liberalcurrents.com/sportswashing-what-it-is-who-does-it-and-how-to-stop-it%EF%BF%BC/ 
