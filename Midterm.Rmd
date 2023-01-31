@@ -1,0 +1,35 @@
+---
+title: "MBDA Midterm"
+author: "David Curtis"
+date: "2023-01-31"
+output: html_document
+---
+
+install.packages("tidymodels")
+install.packages("naniar")
+install.packages("msdr")
+install.packages("dbplyr")
+install.packages("tidytext")
+install.packages("textdata")
+install.packages("reshape2")
+install.packages("worldcloud")
+install.packages("stopwords")
+# SEE modeldata package for new datasets
+````{r}
+library(tidyverse)         # for graphing and data cleaning
+library(tidymodels)        # for modeling
+library(naniar)            # for examining missing values (NAs)
+library(lubridate)         # for date manipulation
+library(dbplyr)            # for SQL query "cheating" - part of tidyverse but needs to be loaded separately
+library(mdsr)              # for accessing some databases - goes with Modern Data Science with R textbook
+library(tidytext)          # for text analysis, the tidy way!
+library(textdata)          
+library(reshape2)
+library(wordcloud)         # for wordcloud
+library(stopwords)
+```
+
+```{r}
+theme_set(theme_minimal())
+```
+
