@@ -98,6 +98,12 @@ region_plot + theme(axis.text.x = element_text(angle = 90))
                                                
 ```
 
+```{r}
+ggplot <- (troll_tweets, aes(x = factor(account_type))) +
+  geom_bar(fill = "blue") +
+  ggtitle ("Frequecy of Tweet by Accout Type") +
+  labs(y = "Count", x = "Account Type")
+```
 3. Unnest Tokens
 
 We want each row to represent a word from a tweet, rather than an entire tweet. Be sure to remove the `eval=FALSE`!!!!
