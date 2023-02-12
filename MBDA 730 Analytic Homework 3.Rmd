@@ -1,0 +1,127 @@
+---
+title: "MDBA Analytic Homework 3"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+    code_download: true
+---
+
+|       The purpose of this analysis is to conduct a quantitative assessment of the data set for suitability in predictive modeling.  The assessment will focus on the frequency distribution and correlation of the variables.
+
+
+```{r, message = FALSE}
+library(tidyverse)
+library(visdat)
+library(readr)
+```
+
+```{r, eval=FALSE}
+url <- "https://data.cityofnewyork.us/api/views/h9gi-nx95/rows.csv?accessType=DOWNLOAD"
+```
+
+```{r, eval=FALSE}
+download.file(url, "Motor_Vehicle_Collisions_-_Crashes.csv")
+```
+
+```{r}
+crashes <- read.csv("Motor_Vehicle_Collisions_-_Crashes.csv")
+```
+
+## Frequency Analysis
+
+|       Frequency Analysis was conducted on the variables understand distribution within the data set.
+
+### Incident Zip Code
+
+```{r}
+hist(crashes$ZIP.CODE, xlab = "Incident Zip Code", main = "Incidents per Zip Code", col = "blue")
+```
+
+### Borough of Incident
+
+```{r}
+borough_plot <- ggplot(crashes, aes(x = factor(BOROUGH))) +
+  geom_bar(fill = "blue") +
+  ggtitle ("Frequency of Incident by Borough") +
+  labs( y = "Count", x = "Borough")
+borough_plot + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r, include=FALSE}
+borough_count <- crashes %>% group_by(BOROUGH) %>% summarise(total_count = n(), .groups = "keep") %>% as.data.frame()
+```
+
+```{r}
+borough_count
+```
+
+### Frequency of Injury
+
+```{r}
+ggplot(crashes, aes(x = factor(NUMBER.OF.PERSONS.INJURED))) +
+  geom_bar(fill = "blue") +
+  ggtitle ("Number of Injuries per Incident") +
+  labs( y = "Count", x = "Number of Injuries")
+```
+
+### Frequency of Death
+
+```{r}
+ggplot(crashes, aes(x = factor(NUMBER.OF.PERSONS.KILLED))) +
+  geom_bar(fill = "blue") +
+  ggtitle ("Number of Fatalities per Incident") +
+  labs( y = "Count", x = "Number of Fatalities")
+```
+
+### Contributing Factors
+
+```{r}
+factor_count <- crashes %>% 
+  count(CONTRIBUTING.FACTOR.VEHICLE.1) %>% 
+  slice_max(order_by = n, n = 25) 
+
+ggplot(factor_count,
+         aes(y = fct_reorder(CONTRIBUTING.FACTOR.VEHICLE.1,n), x = n)) +
+  geom_col(fill = "blue") +
+  ggtitle("Contributing Factor from Vehicle 1") +
+  labs( y = "Assessed Reason for Incident", x = "Number of Incidents")
+```
+
+### Type of Vehicle
+
+```{r}
+vehicle_count <- crashes %>% 
+  count(VEHICLE.TYPE.CODE.1) %>% 
+  slice_max(order_by = n, n = 25) 
+
+ggplot(vehicle_count,
+         aes(y = fct_reorder(VEHICLE.TYPE.CODE.1, n), x = n)) +
+  geom_col(fill = "blue") +
+  ggtitle("Type of Vehicle Involved") +
+  labs( y = "Vehicle Type", x = "Number of Incidents")
+```
+
+### Correlation Test
+
+```{r, include=FALSE}
+crashes1 <- subset(crashes, select = c(ZIP.CODE,
+                                       LATITUDE, 
+                                       LONGITUDE,
+                                       NUMBER.OF.PERSONS.INJURED,
+                                       NUMBER.OF.PERSONS.KILLED,
+                                       NUMBER.OF.PEDESTRIANS.KILLED,
+                                       NUMBER.OF.CYCLIST.INJURED,
+                                       NUMBER.OF.CYCLIST.KILLED,
+                                       NUMBER.OF.MOTORIST.INJURED,
+                                       NUMBER.OF.MOTORIST.KILLED))
+```
+
+```{r, include=FALSE}
+na.omit(crashes1)
+```
+
+```{r}
+cor(crashes1)
+```
