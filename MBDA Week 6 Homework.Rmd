@@ -1,0 +1,160 @@
+---
+title: "MDBA Analytic Homework 3"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+    code_download: true
+---
+
+|       Bias is a pervasive issue as understanding the value of machine learning, deep learning, and data analysis has spread throughout the business world.  Unfortunately, not all analysis focuses on identifying bias in the data set before analysis which can lead to faulty conclusions from data models.  This assignment will summarize my assessment of a data set using qualitative and quantitative bias identification techniques outlined in the Field Guide to Address Bias in Data Sets (Nagubandi, 2021).  
+|
+|       The purpose of this analysis is to conduct a quantitative assessment of the data set for suitability in predictive modeling.  The assessment will focus on the frequency distribution and correlation of the variables.  To understand the suitability of the dataset to create a model, I first began with a qualitative assessment. The first question I asked revolved around the thoroughness, completeness, and source of the data. The data set comprises all vehicle collisions and crashes within New York City limits from 2021 until February 7th, 2023. Several variables collected are the type of vehicle, the time of the incident, injuries reported, the borough the accident occurred, the zip code of the incident, contributing factors, and the street where the incident occurred. The data used to generate the data set is based on Police Reports collected during the investigation of the incident, and each row in the dataset represents a single collision or crash. Because the data set is comprised of police reports and not surveys, there is no observation bias. Similarly, there does not appear to be any opt-in or opt-out criteria within the data set. All personally identifiable information, such as the driver's name or names of persons involved, is not present in the data set.
+|
+## Qualitative Assessment
+
+|       Through the qualitative assessment, I have found that even though it is extensive in detail, the data set has limits to the models it can create. First, the model created would only be valid in certain areas similar enough to where the data was collected for several reasons. New York City has a significantly different population density from other parts of the United States. While it may be informative to understand peak hours when accidents are likely to occur, it may not be as valid in rural areas where fewer motor vehicle operators are on the road then. Next, because of the city planning throughout New York City, safe vehicle operating speeds are significantly different than in other parts of the United States. Because of that difference, the model would be limited in creating predictions of injuries in areas where driving speeds are allowably higher than in New York City. Finally, when the model is used against a population that may have similar driving times, habits, and speeds, there is still one uncaptured variable, weather. Because the weather has been proven to be a significant contributing factor to motor vehicle accidents, a model that predicts the frequency of vehicle crashes based on the time of year or season will prove inaccurate unless it follows the same weather patterns as the area where the data was collected. Simply put, even though Miami or Los Angeles experiences similar congestion and volume as New York, the weather in New York makes a significant enough change to the safety of the roadways that would make a national model from this data set inaccurate.
+|
+|
+```{r, message = FALSE}
+library(tidyverse)
+library(readr)
+```
+
+```{r, eval=FALSE}
+url <- "https://data.cityofnewyork.us/api/views/h9gi-nx95/rows.csv?accessType=DOWNLOAD"
+```
+
+```{r, eval=FALSE}
+download.file(url, "Motor_Vehicle_Collisions_-_Crashes.csv")
+```
+
+```{r}
+crashes <- read.csv("Motor_Vehicle_Collisions_-_Crashes.csv")
+```
+
+## Quantitative Assessment
+
+|       During the quantitative assessment, it was found that some variables lacked information to the extent that definitive conclusions could become problematic during modeling.  For example, when examining the Borough where an incident occurred, it was found that the report was left blank so frequently that it was the most common location for an incident to occur.  This same occurrence was found when evaluating the contributing factor and type of vehicle involved.  The possibility exists that an analyst could conclude that efforts and resources should be diverted to a specific borough or Zip Code based on the incomplete data set.  For that reason, some boroughs, even though it is not understood how representative the borough is for all traffic incidents, could experience different treatment from police like heavier fines for speeding in their area and additional regulatory efforts, even though thier area may not warrant the additional attention.  Furthermore, the data set lacks the information required to understand if vehicle operators involved in the incident are residents of the borough, or were involved in an incident while traveling though the borough.  Therefore, another possible instance could occur where residents unnecessarily receive additional attention from police even though they may not be representative of a population or group most likely to be involved in an incident.
+
+## Frequency Analysis
+
+Frequency Analysis was conducted on the variables understand distribution within the data set.
+
+### Incident Zip Code
+
+```{r}
+hist(crashes$ZIP.CODE, xlab = "Incident Zip Code", main = "Incidents per Zip Code", col = "blue")
+```
+
+### Borough of Incident
+
+```{r}
+borough_plot <- ggplot(crashes, aes(x = factor(BOROUGH))) +
+  geom_bar(fill = "blue") +
+  ggtitle ("Frequency of Incident by Borough") +
+  labs( y = "Count", x = "Borough")
+borough_plot + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r, include=FALSE}
+borough_count <- crashes %>% group_by(BOROUGH) %>% summarise(total_count = n(), .groups = "keep") %>% as.data.frame()
+```
+
+```{r}
+borough_count
+```
+
+### Frequency of Injury
+
+```{r}
+ggplot(crashes, aes(x = factor(NUMBER.OF.PERSONS.INJURED))) +
+  geom_bar(fill = "blue") +
+  ggtitle ("Number of Injuries per Incident") +
+  labs( y = "Count", x = "Number of Injuries")
+```
+
+### Frequency of Death
+
+```{r}
+ggplot(crashes, aes(x = factor(NUMBER.OF.PERSONS.KILLED))) +
+  geom_bar(fill = "blue") +
+  ggtitle ("Number of Fatalities per Incident") +
+  labs( y = "Count", x = "Number of Fatalities")
+```
+
+### Contributing Factors
+
+```{r}
+factor_count <- crashes %>% 
+  count(CONTRIBUTING.FACTOR.VEHICLE.1) %>% 
+  slice_max(order_by = n, n = 25) 
+
+ggplot(factor_count,
+         aes(y = fct_reorder(CONTRIBUTING.FACTOR.VEHICLE.1,n), x = n)) +
+  geom_col(fill = "blue") +
+  ggtitle("Contributing Factor from Vehicle 1") +
+  labs( y = "Assessed Reason for Incident", x = "Number of Incidents")
+```
+
+### Type of Vehicle
+
+```{r}
+vehicle_count <- crashes %>% 
+  count(VEHICLE.TYPE.CODE.1) %>% 
+  slice_max(order_by = n, n = 25) 
+
+ggplot(vehicle_count,
+         aes(y = fct_reorder(VEHICLE.TYPE.CODE.1, n), x = n)) +
+  geom_col(fill = "blue") +
+  ggtitle("Type of Vehicle Involved") +
+  labs( y = "Vehicle Type", x = "Number of Incidents")
+```
+
+### Correlation Test
+
+|       The next step in testing the suitability of the data set required parsing the dataset to test the correlation between variables. Actual analysis of the dataset would require alteration of some variables to test correlation thoroughly. For example, assigning a numeric value to each of the Boroughs would make evaluating the correlation between Borough and injuries possible. However, that step was foregone for a simple test for bias within the dataset. Instead, I ran a correlation test using only the variables with a numeric or integer factor to understand the relationship between variables. None of the numeric variables displayed a relationship so strongly positive or negative that it would lead to potentially faulty causation conclusions.
+
+```{r, include=FALSE}
+crashes1 <- subset(crashes, select = c(ZIP.CODE,
+                                       LATITUDE, 
+                                       LONGITUDE,
+                                       NUMBER.OF.PERSONS.INJURED,
+                                       NUMBER.OF.PERSONS.KILLED,
+                                       NUMBER.OF.PEDESTRIANS.KILLED,
+                                       NUMBER.OF.CYCLIST.INJURED,
+                                       NUMBER.OF.CYCLIST.KILLED,
+                                       NUMBER.OF.MOTORIST.INJURED,
+                                       NUMBER.OF.MOTORIST.KILLED))
+```
+
+```{r, include=FALSE}
+na.omit(crashes1)
+```
+
+```{r}
+cor(crashes1)
+```
+
+## Assessment Conclusion
+|       With thorough cleaning and manipulation of the New York City Crashes Data Set, a valid model could be produced to aid the Department of Transportation in making safer roadways within New York City. There are some significant hurdles to overcome in data collection to ensure the accuracy of the conclusions, such as refinement of the type of vehicle involved in an incident, ensuring the Borough where the incident occurred is captured in the report, and improvement of the reason for the incident. However, an accurate model could be created using this data set for use within New York City or in an area that experiences the same traffic volume and similar weather patterns.
+
+## Adressing Bias and Idenifiability
+
+|       During the assessment of bias it was found that a potential exists to over-police one area of the city compared to another, even though the variable that would inform that effort was woefully incomplete.  The N/A location has the highest frequency of incidents compared to all other boroughs.  Additionally, it was found that by an evaluation of a Data Privacy Project by Sweeney, that it is possible to identify specific individuals through seemingly unimportant variables.  
+|
+|       In Sweeney's work, it was found that through analysis of Census data, individuals could be identified.  By combining the zip code, birth date, and gender, roughly 87% of the American population could be uniquely identified (Sweeney, 2000).  Within the data set, there is information that could be used to not only create bias towards a specific group, such as all residents within a Borough, but also the ability to identify persons involved in an incident.  With the data set in its current form, it would be relatively simple to identify specific individuals through public records that were involved in an incident that resulted in a fatality by understanding the type of vehicle, the location of the incident, and the result of the incident.
+|
+|       To address the bias and the ability to identify individuals through their inclusions in the data set, I believe that all location information should be removed for future modeling.  There are variables within this data set that can be and should be important to policing efforts, but for the purposes of privacy, should not be included in public records.  While certain aspects of the persons involved in the incident are not available in the data set, the location information is one key aspect of Sweeney's work.  In order to maintain relevancy of the data set, I believe that by only removing the location information the data set would still provide value.  For example, by analyzing the reason for incident, the types of vehicles involved, and the time of year, road management and traffic management policies could be improved to create safer roadways.
+|
+|
+```{r, eval=FALSE}
+Motor_Vehicle_Collisions_Crashes1 <- subset(Motor_Vehicle_Collisions_Crashes, select = -c(LATITUDE, LONGITUDE, BOROUGH, ZIP.CODE, ON.STREET.NAME, OFF.STREET.NAME, CROSS.STREET.NAME))
+```
+
+## References
+
+Nagaboundi, G. (2021). Field Guide to Address Bias in Data Sets. Pen Law Policy Lab. Retrieved February 8, 2023 from https://www.law.upenn.edu/live/files/11569-field-guide-to-address-bias-in-datasets
+|
+Sweeney, L. (2000). Simple Demographics Often Identify People Uniquely. Carnegie Melon University. Retrieved February 16, 2023 from https://dataprivacylab.org/projects/identifiability/paper1.pdf
