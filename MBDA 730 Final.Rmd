@@ -53,6 +53,44 @@ The court case presents an argument from Sorrell (the Petitioner) that IMS Healt
 
 Overall, the case illustrates weak privacy regulations' impact on privacy protection. As the monetary value from data analysis and customer information becomes more valuable, additional rules are required to ensure customer and patient anonymity while maintaining the benefit from research. Unfortunately, current HIPAA regulations and U.S. State guidelines for de-identification have proven to be inadequate in ensuring that companies conduct data sharing and data sales to third parties achieving anonymity of the participants in the data set.
 
-## Facial Recognition De-Identification Efforts
+### Facial Recognition De-Identification Efforts
 
 Part one of this paper presented projects illuminating the harm that can occur from biased facial recognition systems as the technology gains acceptance despite its privacy shortfalls. However, facial recognition systems and video surveillance issues can be solved by employing novel technologies. To protect the privacy of individuals, images captured in standard surveillance systems should be de-identified. When coupled with facial recognition software, a system that fails to de-identify individuals in a city-wide surveillance system could effectively track single individuals throughout the coverage area (Newton, 2003). While the New York Times project in part one describes what could occur from inaccurate systems, other efforts exist to ensure that uninformed citizens’ privacy and anonymity are achieved through de-identification from standard video surveillance practices. The technique presented by Newton in the data privacy lab project illustrates how facial recognition systems can continue to be used without infringing on the right to privacy of the citizenry (Newton, 2003).
+
+In the privacy lab project, Newton makes a point to reiterate the value of surveillance systems. The systems proposed attempt to enable the sharing of video data with scientific assurances of privacy protection while keeping the data practically useful (Newton, 2003). The project's goal was to de-identify the facial features to a level where anonymity is achieved while leaving key defining characteristics while simultaneously encrypting the image for re-identification purposes. Previously attempted techniques, such as covering the eyes or altering pixel colors, failed to adequately protect images from facial recognition software.
+
+There would be several privacy implications if Newton's techniques were widely adopted. First, there is a decreased risk that an individual could be discriminated against through inaccurate facial recognition software running against common video surveillance. As presented in part one of this paper, significant accuracy issues negatively impact specific groups. Next, when de-identification is conducted before analysis in facial recognition software systems, another layer of protection is afforded to the privacy of historically infringed groups. Finally, citizens are now afforded the right to privacy. When data sets are shared containing images using Newton's technique of pre-processing facial images before the faces are included in a data set, the people in the data set are safe from re-identification without an encryption key. The owner of the data set of facial images will now be free to share the encrypted images without violating participants' privacy.  
+
+### Genomic Privacy Protection Efforts
+
+Work by Malin included in the data privacy project aims to illustrate how current de-identification protocols when anonymizing genomic data fails to fully protect from re-identification. As previously mentioned in this paper, medical information is protected using HIPPA regulations. Still, as seen through previous court cases such as Sorrell v. IMS Health, those policies are ineffective enough in today’s data-rich environment where genetic information is readily shared for scientific and medical benefit. Although advocates of de-identification address the issue of maintaining privacy with the best intentions when guided only by HIPPA regulations, they often fail to maintain anonymity, and participants can be re-identified (Malin, 2003). Additionally, when following de-identification guidelines, anonymized data can be related to publicly available information to identify specific individuals (Braun, 2009).
+
+Malin proves that even when using several known de-identification methods, re-identification can still be achieved. Through evaluating the breadth of dangers described in the New York Times Privacy project showing the hazards from the oversharing of personal genetic information, it is apparent that further research and regulations are required to protect individual identities. Not only do researchers need to establish effective techniques to de-identify genetic information, but careful consideration should also be taken to determine if direct-to-consumer genetic services are beneficial enough to warrant the inherent loss of privacy.  
+
+### Conclusion
+
+Throughout this paper, several key privacy issues were illustrated by comparing existing privacy projects from the New York Times against ongoing academic and scientific efforts to address existing data privacy issues.  As the data economy expands, ensuring individual privacy will remain a constant hurdle.  This paper has shown how the need for a foundation of privacy and ethical management of identifiable information will only be achieved through additional regulations governing how data is protected and secured.  Only after those regulations are created that address current technological advancements will individuals be safe from re-identification from genomic information and protected from inaccurate conclusions drawn from biased facial recognition programs.
+
+### References
+
+Bala, N. (2020). *Why Are You Sharing Your Child’s DNA Information?*. New York Times. Retrieved January 28, 2023 from https://www.nytimes.com/2020/01/02/opinion/dna-test-privacy-children.html
+
+Braun, R., Rowe, W., Schafer, C., Zhang, J., Buetow, K. (2005). *Needles in the Haystack: Identifying Individuals Present in Pooled Genomic Data*. PLos Genetics. Retrieved February 22, 2023 from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2747273/ 
+
+Burgess, M. (2020). *What is the GDPR? The Summary Guide to Compliance in the UK*. Wired. Retrieved February 18, 2023 from https://www.wired.co.uk/article/what-is-gdpr-uk-eu-legislation-compliance-summary-fines-2018 
+
+Garvie, C. (2019). *You’re In A Police Lineup Right Now*. New York Times. Retrieved January 27, 2023 from https://www.nytimes.com/2019/10/15/opinion/facial-recognition-police.html
+
+Klosowski, T. (2021). *The State of Consumer Data Privacy Protection Laws in the US (Any Why it Matters)*. Wirecutter. Retrieved February 15, 2023 from https://www.nytimes.com/wirecutter/blog/state-of-privacy-laws-in-us/ 
+
+Malin, B. (2003). *Why Pseudonyms Don’t Anonymize: A Computational Re-identification Analysis of Genomic Data Privacy Protection Systems*. Carnegie Melon University. Retrieved January 28, 2023 from https://dataprivacylab.org/dataprivacy/projects/linkage/lidap-wp19.pdf
+
+Najibi, A. (2020). *Racial Discrimination in Face Recognition Technology*. Harvard University. Retrieved February 20, 2023 from https://sitn.hms.harvard.edu/flash/2020/racial-discrimination-in-face-recognition-technology/ 
+
+Newton, E., Sweeney, L., Malin, B. (2003). *Preserving Privacy by De-Identifying Facial Images*. Carnegie Melon University. Retrieved January 27, 2023 from https://dataprivacylab.org/dataprivacy/projects/video/paper.pdf
+
+Singer, N. (2019). *The Government Protects out Food and Cars. Why Not Our Data?*. New York Times. Retrieved January 26, 2023 from https://www.nytimes.com/2019/11/02/sunday-review/data-protection-privacy.html
+
+Suresh, H., Guttag, J. (2021). *A Framework for Understanding Sources of Harm Throughout the Machine Learning Life Cycle*. Massachusetts Institute of Technology. Retrieved February 20, 2023 from https://ucwv.mrooms3.net/pluginfile.php/1285783/mod_page/content/1/A%20Framework%20for%20Understanding%20Sources%20of%20Harm.pdf 
+
+Sweeney, L. (n.d.). *Patient Privacy Risks in U.S. Supreme Court Case Sorrell vs. IMS Health*. Privacy Lab Project. Retrieved January 26, from https://dataprivacylab.org/projects/identifiability/pharma2.pdf
